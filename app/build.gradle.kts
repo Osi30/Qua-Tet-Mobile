@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -53,4 +54,14 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // Retrofit: Thư viện kết nối API chính
+    implementation(libs.retrofit)
+
+    // Kotlin Serialization Converter: Giúp Retrofit hiểu được JSON
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+    implementation(libs.kotlinx.serialization.json)
+
+    // OkHttp Logging Interceptor: Để debug, giúp xem API gọi đi và trả về gì ở Logcat
+    implementation(libs.logging.interceptor)
 }
