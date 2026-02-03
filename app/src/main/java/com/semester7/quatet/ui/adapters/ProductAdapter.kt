@@ -15,13 +15,17 @@ import com.semester7.quatet.R
 class ProductAdapter(private var products: List<ProductDTO>) :
     RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
+    // Ref to View
     class ProductViewHolder(val binding: ItemProductBinding) : RecyclerView.ViewHolder(binding.root)
 
+    // các override fun: Layout Manager thực thi
+    // Tạo View Holder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         val binding = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ProductViewHolder(binding)
     }
 
+    // Nạp dữ liệu cho View Holder
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = products[position]
         with(holder.binding) {
@@ -29,10 +33,12 @@ class ProductAdapter(private var products: List<ProductDTO>) :
 
             // Định dạng giá tiền
             val formatter = NumberFormat
-                .getCurrencyInstance(Locale.Builder()
-                    .setLanguage("vi")
-                    .setRegion("VN")
-                    .build())
+                .getCurrencyInstance(
+                    Locale.Builder()
+                        .setLanguage("vi")
+                        .setRegion("VN")
+                        .build()
+                )
             tvProductPrice.text = formatter.format(product.price)
 
             // Nạp ảnh bằng Coil từ imageUrl mới cập nhật
@@ -43,17 +49,19 @@ class ProductAdapter(private var products: List<ProductDTO>) :
                 transformations(RoundedCornersTransformation(16f))
             }
 
-            // Xử lý sự kiện click nút Add to cart (btnAddToCart)
+            // Add to cart (btnAddToCart)
             btnAddToCart.setOnClickListener {
-                // Code xử lý thêm vào giỏ hàng tại đây
+                // Code xử lý thêm vào giỏ hàng
             }
         }
     }
 
     override fun getItemCount() = products.size
 
-    // Hàm cập nhật dữ liệu khi gọi API xong
+    // Cập nhật dữ liệu
     fun updateData(newProducts: List<ProductDTO>) {
+
+        // So sánh danh sách cũ và mới
         val diffCallback = object : DiffUtil.Callback() {
             override fun getOldListSize(): Int = products.size
             override fun getNewListSize(): Int = newProducts.size
