@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:paddingBottom="24dp">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="12dp"
+        android:background="#E0E0E0" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="Sắp xếp theo"
+        android:textColor="#333333"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#F0F0F0" />
+
+    <LinearLayout
+        android:id="@+id/layoutSortDefault"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Base.CardView">
+
+        <include layout="@layout/item_sort_option" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutSortNewest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Base.CardView">
+
+        <include layout="@layout/item_sort_option" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutSortPopular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Base.CardView">
+
+        <include layout="@layout/item_sort_option" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutSortPriceAsc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Base.CardView">
+
+        <include layout="@layout/item_sort_option" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutSortPriceDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Base.CardView">
+
+        <include layout="@layout/item_sort_option" />
+    </LinearLayout>
+
+</LinearLayout>

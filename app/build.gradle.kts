@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.cardview)
+    implementation(libs.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -78,4 +79,13 @@ dependencies {
 
     // Thư viện Load ảnh
     implementation(libs.coil)
+
+    // Đảm bảo Range Slider hoạt động mà không văng app
+    implementation(libs.material.v190)
+
+    // Hỗ trợ ViewModels cho Activity
+    implementation(libs.androidx.activity.ktx)
+
+    // Hỗ trợ ViewModels cho Fragment (activityViewModels...)
+    implementation(libs.androidx.fragment.ktx)
 }

@@ -8,12 +8,13 @@
     android:layout_margin="6dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="5dp"
-    app:cardPreventCornerOverlap="false">
+    app:cardPreventCornerOverlap="false"
+    app:cardBackgroundColor="@color/white"
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:paddingBottom="12dp">
 
         <ImageView
@@ -38,7 +39,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:text="Bánh Chưng Truyền Thống Quê Hương"
-            android:textColor="#222222"
+            android:textColor="#555555"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
