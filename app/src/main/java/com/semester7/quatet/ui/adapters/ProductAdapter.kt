@@ -12,7 +12,10 @@ import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.semester7.quatet.R
 
-class ProductAdapter(private var products: List<ProductDTO>) :
+class ProductAdapter(
+    private var products: List<ProductDTO>,
+    private val onItemClick: (Int) -> Unit
+) :
     RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     // Ref to View
@@ -47,6 +50,12 @@ class ProductAdapter(private var products: List<ProductDTO>) :
                 placeholder(R.drawable.ic_image_placeholder)
                 error(R.drawable.ic_image_placeholder)
                 transformations(RoundedCornersTransformation(16f))
+            }
+
+            // Event
+            cvProduct.setOnClickListener {
+                // Trả ID về cho Activity xử lý
+                onItemClick(product.productid)
             }
 
             // Add to cart (btnAddToCart)

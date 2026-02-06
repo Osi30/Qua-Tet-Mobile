@@ -4,4 +4,5 @@
         <item>0</item>
         <item>100000000</item>
     </array>
+    <string name="product_stock">Kho: %1$d</string>
 </resources>

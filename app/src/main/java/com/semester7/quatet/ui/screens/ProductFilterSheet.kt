@@ -11,12 +11,12 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.slider.RangeSlider
 import com.semester7.quatet.R
-import com.semester7.quatet.databinding.ProductSheetFilterBinding
+import com.semester7.quatet.databinding.SheetFilterProductBinding
 import com.semester7.quatet.ui.adapters.CategoryAdapter
 import com.semester7.quatet.viewmodel.ProductViewModel
 
 class ProductFilterSheet : BottomSheetDialogFragment() {
-    private lateinit var binding: ProductSheetFilterBinding
+    private lateinit var binding: SheetFilterProductBinding
     private val viewModel: ProductViewModel by activityViewModels()
     private lateinit var categoryAdapter: CategoryAdapter
 
@@ -26,7 +26,7 @@ class ProductFilterSheet : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = ProductSheetFilterBinding.inflate(inflater, container, false)
+        binding = SheetFilterProductBinding.inflate(inflater, container, false)
         return binding.root
     }
 

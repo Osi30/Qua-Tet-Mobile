@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.semester7.quatet.databinding.ActivityProductBinding
 import com.semester7.quatet.ui.adapters.ProductAdapter
+import com.semester7.quatet.ui.screens.ProductDetailFragment
 import com.semester7.quatet.ui.screens.ProductFilterSheet
 import com.semester7.quatet.ui.screens.ProductSortSheet
 import com.semester7.quatet.viewmodel.ProductViewModel
@@ -42,8 +43,38 @@ class ProductActivity : AppCompatActivity() {
 
     // Gắn Adapter
     private fun setupRecyclerView() {
-        adapter = ProductAdapter(emptyList())
+        adapter = ProductAdapter(emptyList()) { productId ->
+            navigateToDetail(productId)
+        }
         binding.rvProducts.adapter = adapter
+    }
+
+    // Kích hoạt mở detail đè lên list
+    private fun navigateToDetail(productId: Int) {
+        // 1. Tạo Fragment mới
+        val detailFragment = ProductDetailFragment()
+
+        // 2. Đóng gói ID sản phẩm vào Bundle để gắn vào argument
+        val bundle = Bundle().apply {
+            putInt("PRODUCT_ID", productId)
+        }
+        detailFragment.arguments = bundle
+
+        // 3. Thực hiện chuyển Fragment
+        supportFragmentManager.beginTransaction()
+            // ID của FrameLayout "gốc" sẽ đè lên toàn bộ Activity
+            // -> Hiển thị detail đè lên trang list
+            .replace(android.R.id.content, detailFragment)
+            // Cho phép nhấn Back để quay lại list
+            .addToBackStack(null)
+            // Thêm hiệu ứng trượt
+            .setCustomAnimations(
+                android.R.anim.slide_in_left,
+                android.R.anim.fade_out,
+                android.R.anim.fade_in,
+                android.R.anim.slide_out_right
+            )
+            .commit()
     }
 
     // Khi có thay đổi -> kích hoạt event

@@ -20,4 +20,7 @@ class ProductRepository {
         minPrice = minPrice,
         maxPrice = maxPrice
     )
+
+    suspend fun getProductById(productId: Int)
+    = apiService.getProductById(productId = productId)
 }
