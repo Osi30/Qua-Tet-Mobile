@@ -1,24 +1,30 @@
 package com.semester7.quatet.ui.screens
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.semester7.quatet.R
+import com.semester7.quatet.data.local.SessionManager
 import com.semester7.quatet.data.model.ProductDetailDTO
 import com.semester7.quatet.databinding.ActivityProductBinding
 import com.semester7.quatet.databinding.FragmentProductDetailBinding
+import com.semester7.quatet.ui.activities.LoginActivity
+import com.semester7.quatet.viewmodel.CartViewModel
 import com.semester7.quatet.viewmodel.ProductDetailViewModel
 import java.text.NumberFormat
 import java.util.Locale
 
 class ProductDetailFragment : Fragment(R.layout.fragment_product_detail) {
     private val viewModel: ProductDetailViewModel by viewModels()
+    private val cartViewModel: CartViewModel by viewModels()
     private var _binding: FragmentProductDetailBinding? = null
     private val binding get() = _binding!!
 
@@ -39,6 +45,7 @@ class ProductDetailFragment : Fragment(R.layout.fragment_product_detail) {
 
         // 2. Thiết lập quan sát dữ liệu (Observer)
         observeViewModel()
+        observeCartViewModel()
 
         // 3. Nút quay lại
         binding.btnBack.setOnClickListener {
@@ -101,9 +108,43 @@ class ProductDetailFragment : Fragment(R.layout.fragment_product_detail) {
             // Disable nút nếu hết hàng
             product.totalQuantity?.let { btnBuyNow.isEnabled = it > 0 }
             product.totalQuantity?.let { btnAddToCart.isEnabled = it > 0 }
+
+            // Xử lý nút Mua ngay — kiểm tra login
+            btnBuyNow.setOnClickListener {
+                if (!SessionManager.isLoggedIn(requireContext())) {
+                    startActivity(Intent(requireContext(), LoginActivity::class.java))
+                } else {
+                    Toast.makeText(requireContext(), "Chức năng đặt hàng đang phát triển", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            // Xử lý nút Thêm vào giỏ — kiểm tra login
+            btnAddToCart.setOnClickListener {
+                if (!SessionManager.isLoggedIn(requireContext())) {
+                    startActivity(Intent(requireContext(), LoginActivity::class.java))
+                } else {
+                    cartViewModel.addItem(product.productid, 1)
+                }
+            }
         }
     }
 
+
+    // Quan sát kết quả thêm giỏ hàng
+    private fun observeCartViewModel() {
+        cartViewModel.successMessage.observe(viewLifecycleOwner) { message ->
+            if (!message.isNullOrEmpty()) {
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                cartViewModel.clearMessages()
+            }
+        }
+        cartViewModel.errorMessage.observe(viewLifecycleOwner) { error ->
+            if (!error.isNullOrEmpty()) {
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+                cartViewModel.clearMessages()
+            }
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

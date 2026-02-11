@@ -11,6 +11,10 @@ import java.util.*
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.semester7.quatet.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ProductAdapter(
     private var products: List<ProductDTO>,
@@ -58,9 +62,26 @@ class ProductAdapter(
                 onItemClick(product.productid)
             }
 
-            // Add to cart (btnAddToCart)
+            // Add to cart (btnAddToCart) — kiểm tra login
             btnAddToCart.setOnClickListener {
-                // Code xử lý thêm vào giỏ hàng
+                val context = holder.itemView.context
+                if (!com.semester7.quatet.data.local.SessionManager.isLoggedIn(context)) {
+                    context.startActivity(
+                        android.content.Intent(context, com.semester7.quatet.ui.activities.LoginActivity::class.java)
+                    )
+                } else {
+                    // Gọi API thêm giỏ hàng
+                    kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
+                        try {
+                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                                com.semester7.quatet.data.repository.CartRepository().addItem(product.productid, 1)
+                            }
+                            android.widget.Toast.makeText(context, "Đã thêm vào giỏ hàng", android.widget.Toast.LENGTH_SHORT).show()
+                        } catch (e: Exception) {
+                            android.widget.Toast.makeText(context, "Lỗi: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             }
         }
     }

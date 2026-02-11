@@ -1,5 +1,6 @@
 package com.semester7.quatet.data.remote
 
+import android.content.Context
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -24,20 +25,26 @@ object RetrofitClient {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
-    // Gắn cơ chế log
-    private val client = OkHttpClient.Builder()
-        .addInterceptor(logging)
-        .build()
+    private var retrofit: Retrofit? = null
 
-    // Khởi tạo sẵn cơ chế gọi API
-    val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .client(client)
-        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-        .build()
+    // Khởi tạo RetrofitClient với Context (gọi 1 lần trong Application hoặc Activity đầu tiên)
+    fun init(context: Context) {
+        if (retrofit != null) return
+
+        val client = OkHttpClient.Builder()
+            .addInterceptor(AuthInterceptor(context.applicationContext))
+            .addInterceptor(logging)
+            .build()
+
+        retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(client)
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .build()
+    }
 
     // Hàm tiện ích để tạo các API Service
     fun <T> createService(serviceClass: Class<T>): T {
-        return retrofit.create(serviceClass)
+        return retrofit!!.create(serviceClass)
     }
 }
