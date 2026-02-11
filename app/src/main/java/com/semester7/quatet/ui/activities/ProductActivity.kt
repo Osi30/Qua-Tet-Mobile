@@ -1,10 +1,15 @@
 package com.semester7.quatet.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.semester7.quatet.data.local.SessionManager
+import com.semester7.quatet.data.remote.RetrofitClient
 import com.semester7.quatet.databinding.ActivityProductBinding
 import com.semester7.quatet.ui.adapters.ProductAdapter
 import com.semester7.quatet.ui.screens.ProductDetailFragment
@@ -24,6 +29,9 @@ class ProductActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // 0. Khởi tạo RetrofitClient với Context (để gắn JWT token)
+        RetrofitClient.init(this)
+
         // 1. Khởi tạo binding (Kết nối với file XML)
         binding = ActivityProductBinding.inflate(layoutInflater)
 
@@ -32,13 +40,25 @@ class ProductActivity : AppCompatActivity() {
 
         setupRecyclerView()
         setupSearch()
+        setupLogout()
         observeViewModel()
 
         // 3. Thiết lập event cho các button
         binding.tvFilter.setOnClickListener { showFilterSheet() }
         binding.tvSort.setOnClickListener { showSortSheet() }
 
+        // 4. Icon giỏ hàng → mở CartActivity
+        binding.ivCart.setOnClickListener {
+            startActivity(Intent(this, CartActivity::class.java))
+        }
+
         viewModel.fetchProducts()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Cập nhật icon logout mỗi khi quay lại màn hình
+        updateLogoutVisibility()
     }
 
     // Gắn Adapter
@@ -156,5 +176,28 @@ class ProductActivity : AppCompatActivity() {
                 return true
             }
         })
+    }
+
+    // Logout
+    private fun setupLogout() {
+        updateLogoutVisibility()
+
+        binding.ivLogout.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Đăng xuất")
+                .setMessage("Bạn có muốn đăng xuất không?")
+                .setPositiveButton("Đăng xuất") { _, _ ->
+                    SessionManager.clearSession(this)
+                    updateLogoutVisibility()
+                    Toast.makeText(this, "Đã đăng xuất", Toast.LENGTH_SHORT).show()
+                }
+                .setNegativeButton("Hủy", null)
+                .show()
+        }
+    }
+
+    private fun updateLogoutVisibility() {
+        binding.ivLogout.visibility =
+            if (SessionManager.isLoggedIn(this)) View.VISIBLE else View.GONE
     }
 }

@@ -36,6 +36,18 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.activities.LoginActivity"
+            android:exported="false" />
+
+        <activity android:name=".ui.activities.RegisterActivity"
+            android:exported="false" />
+
+        <activity android:name=".ui.activities.OtpActivity"
+            android:exported="false" />
+
+        <activity android:name=".ui.activities.CartActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
