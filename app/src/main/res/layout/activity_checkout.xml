@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FBF5E8"> <TextView
+    android:id="@+id/tvHeaderCheckout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Thanh Toán"
+    android:textSize="20sp"
+    android:textStyle="bold"
+    android:textColor="#FFFFFF"
+    android:background="#690000"
+    android:padding="16dp"
+    android:gravity="center"
+    app:layout_constraintTop_toTopOf="parent"/>
+
+    <ProgressBar
+        android:id="@+id/progressBarCheckout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:elevation="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/tvHeaderCheckout"
+        app:layout_constraintBottom_toTopOf="@id/bottomBarLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="#FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Thông tin giao hàng"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="#690000"
+                        android:layout_marginBottom="12dp"/>
+
+                    <EditText
+                        android:id="@+id/edtCustomerName"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:hint="Họ và tên *"
+                        android:inputType="textPersonName"
+                        android:background="@android:drawable/edit_text"
+                        android:layout_marginBottom="8dp"/>
+
+                    <EditText
+                        android:id="@+id/edtCustomerPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:hint="Số điện thoại *"
+                        android:inputType="phone"
+                        android:background="@android:drawable/edit_text"
+                        android:layout_marginBottom="8dp"/>
+
+                    <EditText
+                        android:id="@+id/edtCustomerEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:hint="Email *"
+                        android:inputType="textEmailAddress"
+                        android:background="@android:drawable/edit_text"
+                        android:layout_marginBottom="8dp"/>
+
+                    <EditText
+                        android:id="@+id/edtCustomerAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:hint="Địa chỉ cụ thể (Số nhà, tên đường...) *"
+                        android:inputType="textPostalAddress"
+                        android:background="@android:drawable/edit_text"
+                        android:layout_marginBottom="8dp"/>
+
+                    <EditText
+                        android:id="@+id/edtNote"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:hint="Ghi chú (Tùy chọn)"
+                        android:inputType="textMultiLine"
+                        android:background="@android:drawable/edit_text"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="#FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Phương thức thanh toán"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="#690000"
+                        android:layout_marginBottom="12dp"/>
+
+                    <RadioButton
+                        android:id="@+id/rbVnpay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Thanh toán qua VNPAY"
+                        android:checked="true"
+                        android:textStyle="bold"
+                        android:buttonTint="#4CAF50"/> </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="#FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Đơn hàng của bạn"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="#690000"
+                        android:layout_marginBottom="12dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Tạm tính:"
+                            android:textColor="#757575"/>
+                        <TextView
+                            android:id="@+id/tvCheckoutSubtotal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0đ"
+                            android:textColor="#000000"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Phí vận chuyển:"
+                            android:textColor="#757575"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0đ"
+                            android:textColor="#000000"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottomBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="#FFFFFF"
+        android:elevation="16dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tổng cộng:"
+                android:textColor="#757575"/>
+
+            <TextView
+                android:id="@+id/tvCheckoutTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0đ"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="#DE7B35"/> </LinearLayout>
+
+        <Button
+            android:id="@+id/btnPlaceOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:text="ĐẶT HÀNG"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#690000"
+            app:cornerRadius="12dp"
+            android:paddingHorizontal="32dp"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -47,6 +47,16 @@
 
         <activity android:name=".ui.activities.CartActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.activities.CheckoutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.PaymentWebViewActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.activities.BillingActivity"
+            android:exported="false" />
 
     </application>
 
