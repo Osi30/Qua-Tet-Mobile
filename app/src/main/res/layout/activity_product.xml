@@ -39,7 +39,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:text="Quà Tết 2025"
+                        android:text="Quà Tết 2026"
                         android:textColor="@android:color/white"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -48,7 +48,7 @@
                         android:id="@+id/ivLogout"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:layout_toStartOf="@id/ivCart"
+                        android:layout_toStartOf="@id/layoutCart"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="16dp"
                         android:src="@android:drawable/ic_lock_idle_lock"
@@ -56,14 +56,39 @@
                         android:visibility="gone"
                         app:tint="@android:color/white" />
 
-                    <ImageView
-                        android:id="@+id/ivCart"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                    <FrameLayout
+                        android:id="@+id/layoutCart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/ic_cart"
-                        app:tint="@android:color/white" />
+                        android:clipChildren="false"
+                        android:clipToPadding="false">
+
+                        <ImageView
+                            android:id="@+id/ivCart"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:padding="2dp"
+                            android:src="@drawable/ic_cart"
+                            app:tint="@android:color/white" />
+
+                        <TextView
+                            android:id="@+id/tvCartBadge"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="top|end"
+                            android:layout_marginTop="-4dp"
+                            android:layout_marginEnd="-4dp"
+                            android:background="@drawable/bg_badge_red"
+                            android:gravity="center"
+                            android:text="0"
+                            android:textColor="@android:color/white"
+                            android:textSize="9sp"
+                            android:textStyle="bold"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+                    </FrameLayout>
                 </RelativeLayout>
 
                 <FrameLayout
@@ -88,7 +113,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Mừng Xuân Ất Tỵ 2025"
+                            android:text="Mừng Xuân Ất Tỵ 2026"
                             android:textColor="@android:color/white"
                             android:textSize="22sp"
                             android:textStyle="bold" />
