@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import coil.load
 import coil.transform.RoundedCornersTransformation
@@ -20,6 +21,7 @@ import com.semester7.quatet.R
 import com.semester7.quatet.data.local.SessionManager
 import com.semester7.quatet.data.model.ProductDetailDTO
 import com.semester7.quatet.databinding.FragmentProductDetailBinding
+import com.semester7.quatet.ui.activities.CartActivity
 import com.semester7.quatet.ui.activities.LoginActivity
 import com.semester7.quatet.utils.NotificationHelper
 import com.semester7.quatet.viewmodel.CartViewModel
@@ -29,7 +31,10 @@ import java.util.Locale
 
 class ProductDetailFragment : Fragment(R.layout.fragment_product_detail) {
     private val viewModel: ProductDetailViewModel by viewModels()
-    private val cartViewModel: CartViewModel by viewModels()
+
+    // Dùng activityViewModels() để chia sẻ chung 1 instance với ProductActivity
+    private val cartViewModel: CartViewModel by activityViewModels()
+
     private var _binding: FragmentProductDetailBinding? = null
     private val binding get() = _binding!!
 
@@ -93,6 +98,20 @@ class ProductDetailFragment : Fragment(R.layout.fragment_product_detail) {
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
             binding.layoutContent.visibility = if (isLoading) View.GONE else View.VISIBLE
         }
+
+        // Lắng nghe tín hiệu Mua Ngay thành công
+        viewModel.buyNowSuccess.observe(viewLifecycleOwner) { isSuccess ->
+            if (isSuccess) {
+                // 1. Chuyển hướng sang màn hình Giỏ hàng
+                startActivity(Intent(requireContext(), CartActivity::class.java))
+
+                // 2. Báo cho CartViewModel tải lại giỏ hàng để cập nhật số lượng mới nhất
+                cartViewModel.fetchCart()
+
+                // 3. Reset lại trạng thái để tránh bị lỗi tự động nhảy trang khi bấm nút Back
+                viewModel.resetBuyNowState()
+            }
+        }
     }
 
     private fun displayProductDetails(product: ProductDetailDTO) {
@@ -113,6 +132,7 @@ class ProductDetailFragment : Fragment(R.layout.fragment_product_detail) {
 
                 btnBuyNow.isEnabled = it > 0
                 btnAddToCart.isEnabled = it > 0
+                imgAddToCart.isEnabled = it > 0 // Vô hiệu hóa icon mini nếu hết hàng
             }
 
             imgProduct.load(product.imageUrl) {
@@ -122,14 +142,16 @@ class ProductDetailFragment : Fragment(R.layout.fragment_product_detail) {
                 transformations(RoundedCornersTransformation(16f))
             }
 
+            // --- Sự kiện cho nút MUA NGAY ---
             btnBuyNow.setOnClickListener {
                 if (!SessionManager.isLoggedIn(requireContext())) {
                     startActivity(Intent(requireContext(), LoginActivity::class.java))
                 } else {
-                    Toast.makeText(requireContext(), "Chức năng mua ngay đang phát triển", Toast.LENGTH_SHORT).show()
+                    viewModel.buyNow(product.productid, 1)
                 }
             }
 
+            // --- Sự kiện cho nút THÊM VÀO GIỎ (To, ở Bottom Bar) ---
             btnAddToCart.setOnClickListener {
                 if (!SessionManager.isLoggedIn(requireContext())) {
                     startActivity(Intent(requireContext(), LoginActivity::class.java))
@@ -137,22 +159,28 @@ class ProductDetailFragment : Fragment(R.layout.fragment_product_detail) {
                     cartViewModel.addItem(product.productid, 1)
                 }
             }
+
+            // --- Sự kiện cho nút ICON GIỎ HÀNG MINI (Cạnh giá tiền) ---
+            imgAddToCart.setOnClickListener {
+                if (!SessionManager.isLoggedIn(requireContext())) {
+                    startActivity(Intent(requireContext(), LoginActivity::class.java))
+                } else {
+                    cartViewModel.addItem(product.productid, 1)
+                    Toast.makeText(requireContext(), "Đã ném vào giỏ hàng!", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
     private fun observeCartViewModel() {
-        // Cập nhật Badge trên UI (Icon giỏ hàng trong App) [cite: 17, 19]
         cartViewModel.cart.observe(viewLifecycleOwner) { cart ->
             val count = cart?.itemCount ?: 0
             updateCartBadgeUI(count)
         }
 
-        // Bắn Notification hệ thống để hiển thị Badge ngoài App Icon [cite: 24, 25, 26]
         cartViewModel.shouldShowNotification.observe(viewLifecycleOwner) { message ->
             message?.let {
                 val totalItems = cartViewModel.cart.value?.itemCount ?: 0
-
-                // Chỉ bắn thông báo khi số lượng > 0 để Launcher hiển thị Badge
                 if (totalItems > 0) {
                     NotificationHelper.showCartNotification(
                         requireContext(),
@@ -180,11 +208,7 @@ class ProductDetailFragment : Fragment(R.layout.fragment_product_detail) {
         }
     }
 
-    // Hàm cập nhật con số trên icon giỏ hàng trong màn hình (nếu có)
     private fun updateCartBadgeUI(count: Int) {
-        // Giả sử bạn có tvCartBadge trên Toolbar
-        // binding.tvCartBadge.text = count.toString()
-        // binding.tvCartBadge.visibility = if (count > 0) View.VISIBLE else View.GONE
         Log.d("CART_DEBUG", "Số lượng sản phẩm hiện tại: $count")
     }
 
