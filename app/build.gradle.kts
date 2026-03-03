@@ -88,4 +88,6 @@ dependencies {
 
     // Hỗ trợ ViewModels cho Fragment (activityViewModels...)
     implementation(libs.androidx.fragment.ktx)
+    // Thư viện hỗ trợ ép hiển thị số lượng Badge trên Icon
+    implementation("me.leolin:ShortcutBadger:1.1.22@aar")
 }

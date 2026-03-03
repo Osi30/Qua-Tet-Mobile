@@ -25,9 +25,6 @@ class ProductActivity : AppCompatActivity() {
     private lateinit var adapter: ProductAdapter
 
     private val viewModel: ProductViewModel by viewModels()
-
-    // CHỐT CHẶN: Activity khởi tạo CartViewModel gốc.
-    // Fragment sẽ dùng activityViewModels() để truy cập vào đúng Instance này.
     private val cartViewModel: CartViewModel by viewModels()
 
     private var filterSheet: ProductFilterSheet? = null
@@ -40,15 +37,12 @@ class ProductActivity : AppCompatActivity() {
         binding = ActivityProductBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 1. Khởi tạo Kênh thông báo ngay khi mở app để sẵn sàng hiển thị Badge [cite: 26]
         NotificationHelper.createNotificationChannel(this)
 
         setupRecyclerView()
         setupSearch()
         setupLogout()
         observeViewModel()
-
-        // 2. Bắt đầu quan sát giỏ hàng để cập nhật Badge ngay lập tức [cite: 24]
         observeCart()
 
         binding.tvFilter.setOnClickListener { showFilterSheet() }
@@ -60,7 +54,6 @@ class ProductActivity : AppCompatActivity() {
 
         viewModel.fetchProducts()
 
-        // Lấy dữ liệu giỏ hàng ban đầu để hiển thị Badge nếu người dùng đã login [cite: 7]
         if (SessionManager.isLoggedIn(this)) {
             cartViewModel.fetchCart()
         }
@@ -69,33 +62,34 @@ class ProductActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         updateLogoutVisibility()
-        // Đảm bảo dữ liệu giỏ hàng được đồng bộ lại khi quay lại từ CartActivity
         if (SessionManager.isLoggedIn(this)) {
             cartViewModel.fetchCart()
         }
     }
 
     private fun observeCart() {
-        // Lắng nghe mọi thay đổi từ giỏ hàng (kể cả lệnh gọi từ Fragment)
         cartViewModel.cart.observe(this) { cart ->
             val count = cart?.itemCount ?: 0
 
-            // Cập nhật con số trên icon giỏ hàng TRONG ứng dụng
             if (count > 0) {
+                // Hiển thị số lượng trong App
                 binding.tvCartBadge.visibility = View.VISIBLE
                 binding.tvCartBadge.text = if (count > 99) "99+" else count.toString()
-            } else {
-                binding.tvCartBadge.visibility = View.GONE
-            }
 
-            // Cập nhật Badge TRÊN Icon app ngoài màn hình chính [cite: 25]
-            // Khi số lượng thay đổi, chúng ta cập nhật thầm lặng để Launcher hiển thị Badge mới
-            NotificationHelper.showCartNotification(
-                this,
-                getString(R.string.app_name),
-                "Bạn đang có $count sản phẩm trong giỏ hàng.",
-                count
-            )
+                // Hiển thị số lượng ngoài Icon App thông qua thư viện
+                NotificationHelper.showCartNotification(
+                    this,
+                    getString(R.string.app_name),
+                    "Bạn đang có $count sản phẩm trong giỏ hàng.",
+                    count
+                )
+            } else {
+                // Ẩn số lượng trong App
+                binding.tvCartBadge.visibility = View.GONE
+
+                // Dọn dẹp số lượng ngoài Icon App và tắt thông báo thanh trạng thái
+                NotificationHelper.clearBadge(this)
+            }
         }
     }
 
@@ -181,9 +175,13 @@ class ProductActivity : AppCompatActivity() {
                 .setPositiveButton("Đăng xuất") { _, _ ->
                     SessionManager.clearSession(this)
                     updateLogoutVisibility()
-                    // Xóa hoàn toàn Badge khi logout
+
+                    // Reset UI trong App
                     binding.tvCartBadge.visibility = View.GONE
-                    NotificationHelper.showCartNotification(this, getString(R.string.app_name), "Đã đăng xuất", 0)
+
+                    // XÓA SẠCH Icon Badge khi đăng xuất
+                    NotificationHelper.clearBadge(this)
+
                     Toast.makeText(this, "Đã đăng xuất", Toast.LENGTH_SHORT).show()
                 }
                 .setNegativeButton("Hủy", null)

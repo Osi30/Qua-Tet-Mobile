@@ -109,13 +109,8 @@ class CartActivity : AppCompatActivity() {
                 binding.tvClearCart.visibility = View.GONE
                 currentTotalPrice = 0.0
 
-                // ĐỒNG BỘ BADGE: Xóa thông báo khi giỏ hàng rỗng
-                NotificationHelper.showCartNotification(
-                    this,
-                    getString(R.string.app_name),
-                    "Giỏ hàng của bạn đang trống.",
-                    0 // Badge sẽ biến mất khi số lượng là 0
-                )
+                // ĐỒNG BỘ BADGE: Xóa thông báo hệ thống khi giỏ hàng rỗng
+                NotificationHelper.clearBadge(this)
             } else {
                 binding.rvCartItems.visibility = View.VISIBLE
                 binding.layoutEmpty.visibility = View.GONE
@@ -130,12 +125,12 @@ class CartActivity : AppCompatActivity() {
                 binding.tvTotalPrice.text = formatter.format(total)
                 binding.tvItemCount.text = "${cart.itemCount ?: 0} sản phẩm"
 
-                // ĐỒNG BỘ BADGE: Cập nhật số lượng mới nhất lên App Icon
+                // ĐỒNG BỘ BADGE: Ép Launcher vẽ lại số lượng mới nhất lên App Icon
                 NotificationHelper.showCartNotification(
                     this,
                     getString(R.string.app_name),
                     "Bạn đang có ${cart.itemCount} sản phẩm trong giỏ hàng.",
-                    cart.itemCount
+                    cart.itemCount ?: 0
                 )
             }
         }
