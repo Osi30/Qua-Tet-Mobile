@@ -17,6 +17,14 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Nếu đã đăng nhập rồi → chuyển thẳng sang ProductActivity
+        if (SessionManager.isLoggedIn(this)) {
+            startActivity(Intent(this, ProductActivity::class.java))
+            finish()
+            return
+        }
+
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
