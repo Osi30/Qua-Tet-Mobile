@@ -67,6 +67,9 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
 
             // Quay lại trang trước
+            val intent = Intent(this, ProductActivity::class.java)
+            startActivity(intent)
+
             setResult(RESULT_OK)
             finish()
         }
