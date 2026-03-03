@@ -174,15 +174,17 @@ class ProductActivity : AppCompatActivity() {
                 .setMessage("Bạn có muốn đăng xuất không?")
                 .setPositiveButton("Đăng xuất") { _, _ ->
                     SessionManager.clearSession(this)
-                    updateLogoutVisibility()
-
-                    // Reset UI trong App
-                    binding.tvCartBadge.visibility = View.GONE
 
                     // XÓA SẠCH Icon Badge khi đăng xuất
                     NotificationHelper.clearBadge(this)
 
                     Toast.makeText(this, "Đã đăng xuất", Toast.LENGTH_SHORT).show()
+
+                    // Chuyển về LoginActivity và xóa toàn bộ back stack
+                    val intent = Intent(this, LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    finish()
                 }
                 .setNegativeButton("Hủy", null)
                 .show()
