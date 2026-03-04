@@ -68,6 +68,10 @@
             android:name=".ui.activities.StoreLocationMapActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.activities.ChatActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

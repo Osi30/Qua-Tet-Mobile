@@ -74,22 +74,22 @@ class ProductActivity : AppCompatActivity() {
             val count = cart?.itemCount ?: 0
 
             if (count > 0) {
-                // Hiển thị số lượng trong App
+                // Hien thi so luong trong app
                 binding.tvCartBadge.visibility = View.VISIBLE
                 binding.tvCartBadge.text = if (count > 99) "99+" else count.toString()
 
-                // Hiển thị số lượng ngoài Icon App thông qua thư viện
+                // Hien thi so luong ngoai icon app thong qua thu vien
                 NotificationHelper.showCartNotification(
                     this,
                     getString(R.string.app_name),
-                    "Bạn đang có $count sản phẩm trong giỏ hàng.",
+                    "Ban dang co $count san pham trong gio hang.",
                     count
                 )
             } else {
-                // Ẩn số lượng trong App
+                // An so luong trong app
                 binding.tvCartBadge.visibility = View.GONE
 
-                // Dọn dẹp số lượng ngoài Icon App và tắt thông báo thanh trạng thái
+                // Don dep so luong ngoai icon app va tat thong bao
                 NotificationHelper.clearBadge(this)
             }
         }
@@ -184,6 +184,11 @@ class ProductActivity : AppCompatActivity() {
                         true
                     }
 
+                    R.id.menu_chat_support -> {
+                        startActivity(Intent(this, ChatActivity::class.java))
+                        true
+                    }
+
                     else -> false
                 }
             }
@@ -195,23 +200,23 @@ class ProductActivity : AppCompatActivity() {
         updateLogoutVisibility()
         binding.ivLogout.setOnClickListener {
             AlertDialog.Builder(this)
-                .setTitle("Đăng xuất")
-                .setMessage("Bạn có muốn đăng xuất không?")
-                .setPositiveButton("Đăng xuất") { _, _ ->
+                .setTitle("Dang xuat")
+                .setMessage("Ban co muon dang xuat khong?")
+                .setPositiveButton("Dang xuat") { _, _ ->
                     SessionManager.clearSession(this)
 
-                    // XÓA SẠCH Icon Badge khi đăng xuất
+                    // Xoa icon badge khi dang xuat
                     NotificationHelper.clearBadge(this)
 
-                    Toast.makeText(this, "Đã đăng xuất", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Da dang xuat", Toast.LENGTH_SHORT).show()
 
-                    // Chuyển về LoginActivity và xóa toàn bộ back stack
+                    // Chuyen ve LoginActivity va xoa toan bo back stack
                     val intent = Intent(this, LoginActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                     finish()
                 }
-                .setNegativeButton("Hủy", null)
+                .setNegativeButton("Huy", null)
                 .show()
         }
     }
