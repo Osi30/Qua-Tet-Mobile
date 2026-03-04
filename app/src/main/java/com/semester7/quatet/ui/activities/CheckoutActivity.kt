@@ -54,6 +54,11 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
+        binding.btnBackToCart.setOnClickListener {
+            startActivity(Intent(this, CartActivity::class.java))
+            finish()
+        }
+
         binding.btnManageAddress.setOnClickListener {
             manageAddressLauncher.launch(
                 Intent(this, AddressActivity::class.java).apply {
@@ -70,11 +75,12 @@ class CheckoutActivity : AppCompatActivity() {
             val note = binding.edtNote.text.toString().trim()
 
             if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || address.isEmpty()) {
-                Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin bắt buộc (*)", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin bắt buộc (*)", Toast.LENGTH_SHORT)
+                    .show()
                 return@setOnClickListener
             }
 
-            Log.d("CHECKOUT_UI", "Bat dau goi ViewModel xu ly Checkout...")
+            Log.d("CHECKOUT_UI", "Bắt đầu gọi ViewModel xử lý Checkout...")
             viewModel.processCheckout(name, phone, email, address, note)
         }
     }
@@ -96,7 +102,7 @@ class CheckoutActivity : AppCompatActivity() {
 
         viewModel.errorMessage.observe(this) { errorMsg ->
             if (!errorMsg.isNullOrEmpty()) {
-                Log.e("CHECKOUT_UI", "Loi tu ViewModel: $errorMsg")
+                Log.e("CHECKOUT_UI", "Lỗi từ ViewModel: $errorMsg")
                 Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show()
                 viewModel.clearMessages()
             }
@@ -104,7 +110,7 @@ class CheckoutActivity : AppCompatActivity() {
 
         viewModel.paymentUrl.observe(this) { url ->
             if (!url.isNullOrEmpty()) {
-                Log.d("CHECKOUT_UI", "Nhan duoc URL VNPay: $url")
+                Log.d("CHECKOUT_UI", "Nhận được URL VNPay: $url")
 
                 val currentOrderId = viewModel.createdOrderId.value ?: -1
 

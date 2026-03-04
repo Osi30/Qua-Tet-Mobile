@@ -6,18 +6,36 @@
     android:layout_height="match_parent"
     android:background="#FBF5E8">
 
-    <TextView
-        android:id="@+id/tvHeaderCheckout"
+    <RelativeLayout
+        android:id="@+id/layoutHeaderCheckout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#690000"
-        android:gravity="center"
-        android:padding="16dp"
-        android:text="Thanh toÃ¡n"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:paddingVertical="12dp"
+        android:paddingHorizontal="12dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnBackToCart"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:contentDescription="Quay lại giỏ hàng"
+            android:padding="8dp"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="@android:color/white" />
+
+        <TextView
+            android:id="@+id/tvHeaderCheckout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Thanh toán"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/progressBarCheckout"
@@ -34,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/bottomBarLayout"
-        app:layout_constraintTop_toBottomOf="@id/tvHeaderCheckout">
+        app:layout_constraintTop_toBottomOf="@id/layoutHeaderCheckout">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -59,15 +77,15 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="12dp">
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="ThÃ´ng tin giao hÃ ng"
+                            android:text="Thông tin giao hàng"
                             android:textColor="#690000"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -77,7 +95,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
                             android:backgroundTint="#8B0000"
-                            android:text="Äá»‹a chá»‰ giao hÃ ng"
+                            android:text="Địa chỉ giao hàng"
                             android:textAllCaps="false"
                             android:textColor="#FFFFFF"
                             android:textSize="12sp"
@@ -90,7 +108,7 @@
                         android:layout_height="50dp"
                         android:layout_marginBottom="8dp"
                         android:background="@android:drawable/edit_text"
-                        android:hint="Há» vÃ  tÃªn *"
+                        android:hint="Họ và tên *"
                         android:inputType="textPersonName" />
 
                     <EditText
@@ -99,7 +117,7 @@
                         android:layout_height="50dp"
                         android:layout_marginBottom="8dp"
                         android:background="@android:drawable/edit_text"
-                        android:hint="Sá»‘ Ä‘iá»‡n thoáº¡i *"
+                        android:hint="Số điện thoại *"
                         android:inputType="phone" />
 
                     <EditText
@@ -117,7 +135,7 @@
                         android:layout_height="50dp"
                         android:layout_marginBottom="8dp"
                         android:background="@android:drawable/edit_text"
-                        android:hint="Äá»‹a chá»‰ cá»¥ thá»ƒ *"
+                        android:hint="Địa chỉ cụ thể *"
                         android:inputType="textPostalAddress" />
 
                     <EditText
@@ -125,7 +143,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:background="@android:drawable/edit_text"
-                        android:hint="Ghi chÃº (tÃ¹y chá»n)"
+                        android:hint="Ghi chú (tùy chọn)"
                         android:inputType="textMultiLine" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -148,7 +166,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
-                        android:text="PhÆ°Æ¡ng thá»©c thanh toÃ¡n"
+                        android:text="Phương thức thanh toán"
                         android:textColor="#690000"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -159,7 +177,7 @@
                         android:layout_height="wrap_content"
                         android:buttonTint="#4CAF50"
                         android:checked="true"
-                        android:text="Thanh toÃ¡n qua VNPAY"
+                        android:text="Thanh toán qua VNPAY"
                         android:textStyle="bold" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -181,7 +199,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
-                        android:text="ÄÆ¡n hÃ ng cá»§a báº¡n"
+                        android:text="Đơn hàng của bạn"
                         android:textColor="#690000"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -195,14 +213,14 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Táº¡m tÃ­nh:"
+                            android:text="Tạm tính:"
                             android:textColor="#757575" />
 
                         <TextView
                             android:id="@+id/tvCheckoutSubtotal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0d"
+                            android:text="0đ"
                             android:textColor="#000000" />
                     </LinearLayout>
 
@@ -216,13 +234,13 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="PhÃ­ váº­n chuyá»ƒn:"
+                            android:text="Phí vận chuyển:"
                             android:textColor="#757575" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0d"
+                            android:text="0đ"
                             android:textColor="#000000" />
                     </LinearLayout>
                 </LinearLayout>
@@ -250,14 +268,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tá»•ng cá»™ng:"
+                android:text="Tổng cộng:"
                 android:textColor="#757575" />
 
             <TextView
                 android:id="@+id/tvCheckoutTotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0d"
+                android:text="0đ"
                 android:textColor="#DE7B35"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -269,7 +287,7 @@
             android:layout_height="56dp"
             android:backgroundTint="#690000"
             android:paddingHorizontal="32dp"
-            android:text="Äáº¶T HÃ€NG"
+            android:text="ĐẶT HÀNG"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold"

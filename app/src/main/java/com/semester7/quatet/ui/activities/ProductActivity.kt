@@ -5,15 +5,16 @@ import android.os.Bundle
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.semester7.quatet.R
 import com.semester7.quatet.data.local.SessionManager
 import com.semester7.quatet.data.remote.RetrofitClient
 import com.semester7.quatet.databinding.ActivityProductBinding
 import com.semester7.quatet.ui.adapters.ProductAdapter
+import com.semester7.quatet.ui.adapters.QuickCategoryAdapter
+import com.semester7.quatet.ui.adapters.QuickCategoryItem
 import com.semester7.quatet.ui.screens.ProductDetailFragment
 import com.semester7.quatet.ui.screens.ProductFilterSheet
 import com.semester7.quatet.ui.screens.ProductSortSheet
@@ -24,12 +25,14 @@ import com.semester7.quatet.viewmodel.ProductViewModel
 class ProductActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductBinding
     private lateinit var adapter: ProductAdapter
+    private lateinit var quickCategoryAdapter: QuickCategoryAdapter
 
     private val viewModel: ProductViewModel by viewModels()
     private val cartViewModel: CartViewModel by viewModels()
 
     private var filterSheet: ProductFilterSheet? = null
     private var sortSheet: ProductSortSheet? = null
+    private var selectedQuickCategoryId: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +44,7 @@ class ProductActivity : AppCompatActivity() {
         NotificationHelper.createNotificationChannel(this)
 
         setupRecyclerView()
+        setupQuickCategories()
         setupSearch()
         setupHeaderMenu()
         BottomTabNavigator.setup(this, BottomTabNavigator.Tab.HOME)
@@ -103,6 +107,19 @@ class ProductActivity : AppCompatActivity() {
         binding.rvProducts.adapter = adapter
     }
 
+    private fun setupQuickCategories() {
+        quickCategoryAdapter = QuickCategoryAdapter(emptyList()) { categoryId ->
+            selectedQuickCategoryId = categoryId
+            val selectedIds = categoryId?.let { listOf(it) } ?: emptyList()
+            viewModel.currentSelectedCategoryIds = selectedIds
+            viewModel.updateFilters(categories = selectedIds)
+        }
+
+        binding.rvQuickCategories.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvQuickCategories.adapter = quickCategoryAdapter
+    }
+
     private fun navigateToDetail(productId: Int) {
         val detailFragment = ProductDetailFragment()
         val bundle = Bundle().apply {
@@ -123,6 +140,24 @@ class ProductActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
+        viewModel.categories.observe(this) { categories ->
+            val quickItems = mutableListOf(QuickCategoryItem(id = null, label = "All"))
+            quickItems.addAll(
+                categories.orEmpty().map { category ->
+                    QuickCategoryItem(
+                        id = category.categoryid,
+                        label = category.categoryname
+                    )
+                }
+            )
+
+            val validSelection = selectedQuickCategoryId?.takeIf { selectedId ->
+                categories.orEmpty().any { it.categoryid == selectedId }
+            }
+            selectedQuickCategoryId = validSelection
+            quickCategoryAdapter.updateData(quickItems, selectedQuickCategoryId)
+        }
+
         viewModel.products.observe(this) { productList ->
             if (productList.isNullOrEmpty()) {
                 binding.rvProducts.visibility = View.GONE
@@ -198,31 +233,11 @@ class ProductActivity : AppCompatActivity() {
     }
 
     private fun setupLogout() {
-        updateLogoutVisibility()
-        binding.ivLogout.setOnClickListener {
-            AlertDialog.Builder(this)
-                .setTitle("Dang xuat")
-                .setMessage("Ban co muon dang xuat khong?")
-                .setPositiveButton("Dang xuat") { _, _ ->
-                    SessionManager.clearSession(this)
-
-                    // Xoa icon badge khi dang xuat
-                    NotificationHelper.clearBadge(this)
-
-                    Toast.makeText(this, "Da dang xuat", Toast.LENGTH_SHORT).show()
-
-                    // Chuyen ve LoginActivity va xoa toan bo back stack
-                    val intent = Intent(this, LoginActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-                    finish()
-                }
-                .setNegativeButton("Huy", null)
-                .show()
-        }
+        // Trang homepage hien tai khong su dung nut dang xuat o header
+        binding.ivLogout.visibility = View.GONE
     }
 
     private fun updateLogoutVisibility() {
-        binding.ivLogout.visibility = if (SessionManager.isLoggedIn(this)) View.VISIBLE else View.GONE
+        binding.ivLogout.visibility = View.GONE
     }
 }
