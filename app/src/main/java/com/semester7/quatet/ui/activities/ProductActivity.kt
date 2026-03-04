@@ -3,6 +3,7 @@ package com.semester7.quatet.ui.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.PopupMenu
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -41,6 +42,7 @@ class ProductActivity : AppCompatActivity() {
 
         setupRecyclerView()
         setupSearch()
+        setupHeaderMenu()
         setupLogout()
         observeViewModel()
         observeCart()
@@ -164,6 +166,29 @@ class ProductActivity : AppCompatActivity() {
                 return true
             }
         })
+    }
+
+    private fun setupHeaderMenu() {
+        binding.ivMenu.setOnClickListener { anchor ->
+            val popup = PopupMenu(this, anchor)
+            popup.menuInflater.inflate(R.menu.menu_header_options, popup.menu)
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.menu_address_book -> {
+                        startActivity(Intent(this, AddressActivity::class.java))
+                        true
+                    }
+
+                    R.id.menu_store_locations -> {
+                        startActivity(Intent(this, StoreLocationMapActivity::class.java))
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+            popup.show()
+        }
     }
 
     private fun setupLogout() {
