@@ -13,7 +13,7 @@
         android:background="#690000"
         android:gravity="center"
         android:padding="16dp"
-        android:text="Thanh toán"
+        android:text="Thanh toÃ¡n"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -67,7 +67,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Thông tin giao hàng"
+                            android:text="ThÃ´ng tin giao hÃ ng"
                             android:textColor="#690000"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -77,7 +77,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
                             android:backgroundTint="#8B0000"
-                            android:text="Sổ địa chỉ"
+                            android:text="Äá»‹a chá»‰ giao hÃ ng"
                             android:textAllCaps="false"
                             android:textColor="#FFFFFF"
                             android:textSize="12sp"
@@ -90,7 +90,7 @@
                         android:layout_height="50dp"
                         android:layout_marginBottom="8dp"
                         android:background="@android:drawable/edit_text"
-                        android:hint="Họ và tên *"
+                        android:hint="Há» vÃ  tÃªn *"
                         android:inputType="textPersonName" />
 
                     <EditText
@@ -99,7 +99,7 @@
                         android:layout_height="50dp"
                         android:layout_marginBottom="8dp"
                         android:background="@android:drawable/edit_text"
-                        android:hint="Số điện thoại *"
+                        android:hint="Sá»‘ Ä‘iá»‡n thoáº¡i *"
                         android:inputType="phone" />
 
                     <EditText
@@ -117,7 +117,7 @@
                         android:layout_height="50dp"
                         android:layout_marginBottom="8dp"
                         android:background="@android:drawable/edit_text"
-                        android:hint="Địa chỉ cụ thể *"
+                        android:hint="Äá»‹a chá»‰ cá»¥ thá»ƒ *"
                         android:inputType="textPostalAddress" />
 
                     <EditText
@@ -125,7 +125,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:background="@android:drawable/edit_text"
-                        android:hint="Ghi chú (tùy chọn)"
+                        android:hint="Ghi chÃº (tÃ¹y chá»n)"
                         android:inputType="textMultiLine" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -148,7 +148,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
-                        android:text="Phương thức thanh toán"
+                        android:text="PhÆ°Æ¡ng thá»©c thanh toÃ¡n"
                         android:textColor="#690000"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -159,7 +159,7 @@
                         android:layout_height="wrap_content"
                         android:buttonTint="#4CAF50"
                         android:checked="true"
-                        android:text="Thanh toán qua VNPAY"
+                        android:text="Thanh toÃ¡n qua VNPAY"
                         android:textStyle="bold" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -181,7 +181,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
-                        android:text="Đơn hàng của bạn"
+                        android:text="ÄÆ¡n hÃ ng cá»§a báº¡n"
                         android:textColor="#690000"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -195,7 +195,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Tạm tính:"
+                            android:text="Táº¡m tÃ­nh:"
                             android:textColor="#757575" />
 
                         <TextView
@@ -216,7 +216,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Phí vận chuyển:"
+                            android:text="PhÃ­ váº­n chuyá»ƒn:"
                             android:textColor="#757575" />
 
                         <TextView
@@ -250,7 +250,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tổng cộng:"
+                android:text="Tá»•ng cá»™ng:"
                 android:textColor="#757575" />
 
             <TextView
@@ -269,7 +269,7 @@
             android:layout_height="56dp"
             android:backgroundTint="#690000"
             android:paddingHorizontal="32dp"
-            android:text="ĐẶT HÀNG"
+            android:text="Äáº¶T HÃ€NG"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold"

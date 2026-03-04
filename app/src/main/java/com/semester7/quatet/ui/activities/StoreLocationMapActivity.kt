@@ -61,6 +61,7 @@ class StoreLocationMapActivity : AppCompatActivity() {
         binding = ActivityStoreLocationMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        BottomTabNavigator.setup(this, BottomTabNavigator.Tab.STORE_LOCATION)
         setupMap()
         setupUi()
         observeViewModel()
@@ -80,8 +81,6 @@ class StoreLocationMapActivity : AppCompatActivity() {
     }
 
     private fun setupUi() {
-        binding.ivBack.setOnClickListener { finish() }
-
         val adapter = ArrayAdapter(
             this,
             android.R.layout.simple_spinner_item,

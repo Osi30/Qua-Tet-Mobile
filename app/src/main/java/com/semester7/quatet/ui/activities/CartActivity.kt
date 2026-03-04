@@ -14,7 +14,7 @@ import com.semester7.quatet.ui.adapters.CartAdapter
 import com.semester7.quatet.utils.NotificationHelper
 import com.semester7.quatet.viewmodel.CartViewModel
 import java.text.NumberFormat
-import java.util.*
+import java.util.Locale
 
 class CartActivity : AppCompatActivity() {
 
@@ -33,6 +33,7 @@ class CartActivity : AppCompatActivity() {
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        BottomTabNavigator.setup(this, BottomTabNavigator.Tab.CART)
         setupRecyclerView()
         setupListeners()
         observeViewModel()
@@ -76,8 +77,6 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        binding.ivBack.setOnClickListener { finish() }
-
         binding.tvClearCart.setOnClickListener {
             AlertDialog.Builder(this)
                 .setTitle("Xóa giỏ hàng")
@@ -109,7 +108,6 @@ class CartActivity : AppCompatActivity() {
                 binding.tvClearCart.visibility = View.GONE
                 currentTotalPrice = 0.0
 
-                // ĐỒNG BỘ BADGE: Xóa thông báo hệ thống khi giỏ hàng rỗng
                 NotificationHelper.clearBadge(this)
             } else {
                 binding.rvCartItems.visibility = View.VISIBLE
@@ -125,7 +123,6 @@ class CartActivity : AppCompatActivity() {
                 binding.tvTotalPrice.text = formatter.format(total)
                 binding.tvItemCount.text = "${cart.itemCount ?: 0} sản phẩm"
 
-                // ĐỒNG BỘ BADGE: Ép Launcher vẽ lại số lượng mới nhất lên App Icon
                 NotificationHelper.showCartNotification(
                     this,
                     getString(R.string.app_name),

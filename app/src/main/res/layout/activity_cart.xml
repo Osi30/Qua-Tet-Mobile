@@ -7,44 +7,17 @@
     android:background="#F5F5F5"
     android:orientation="vertical">
 
-    <!-- Header -->
-    <RelativeLayout
+    <TextView
+        android:id="@+id/tvClearCart"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="#8B0000"
-        android:paddingHorizontal="16dp">
+        android:layout_height="44dp"
+        android:gravity="end|center_vertical"
+        android:paddingHorizontal="16dp"
+        android:text="Xóa hết"
+        android:textColor="#8B0000"
+        android:textSize="14sp"
+        android:visibility="gone" />
 
-        <ImageView
-            android:id="@+id/ivBack"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_centerVertical="true"
-            android:contentDescription="Quay lại"
-            android:src="@drawable/ic_arrow_back"
-            app:tint="@android:color/white" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Giỏ hàng"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvClearCart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:text="Xóa hết"
-            android:textColor="#FFCCCC"
-            android:textSize="14sp"
-            android:visibility="gone" />
-    </RelativeLayout>
-
-    <!-- Danh sách sản phẩm trong giỏ -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCartItems"
         android:layout_width="match_parent"
@@ -55,7 +28,6 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_cart" />
 
-    <!-- Loading -->
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
@@ -63,7 +35,6 @@
         android:layout_gravity="center"
         android:visibility="gone" />
 
-    <!-- Empty state -->
     <LinearLayout
         android:id="@+id/layoutEmpty"
         android:layout_width="match_parent"
@@ -76,13 +47,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="🛒"
-            android:textSize="48sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:text="Giỏ hàng trống"
             android:textColor="#888888"
             android:textSize="16sp"
@@ -97,7 +61,6 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <!-- Footer: Tổng tiền + Nút thanh toán -->
     <LinearLayout
         android:id="@+id/layoutFooter"
         android:layout_width="match_parent"
@@ -108,7 +71,6 @@
         android:padding="16dp"
         android:visibility="gone">
 
-        <!-- Tổng tiền -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -132,7 +94,6 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Số lượng sản phẩm -->
         <TextView
             android:id="@+id/tvItemCount"
             android:layout_width="wrap_content"
@@ -142,7 +103,6 @@
             android:textColor="#888888"
             android:textSize="13sp" />
 
-        <!-- Nút Thanh toán -->
         <Button
             android:id="@+id/btnCheckout"
             android:layout_width="match_parent"
@@ -156,4 +116,5 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <include layout="@layout/layout_bottom_nav" />
 </LinearLayout>

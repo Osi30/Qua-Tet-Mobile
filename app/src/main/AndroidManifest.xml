@@ -25,7 +25,8 @@
 
         <activity
             android:name=".ui.activities.ProductActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTask" />
 
         <activity
             android:name=".ui.activities.LoginActivity"
@@ -46,7 +47,8 @@
 
         <activity
             android:name=".ui.activities.CartActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTask" />
 
         <activity
             android:name=".ui.activities.CheckoutActivity"
@@ -66,11 +68,20 @@
 
         <activity
             android:name=".ui.activities.StoreLocationMapActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTask" />
 
         <activity
             android:name=".ui.activities.ChatActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.activities.OrderHistoryActivity"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".ui.activities.SettingsActivity"
+            android:exported="false"
+            android:launchMode="singleTask" />
 
     </application>
 

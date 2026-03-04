@@ -43,6 +43,7 @@ class ProductActivity : AppCompatActivity() {
         setupRecyclerView()
         setupSearch()
         setupHeaderMenu()
+        BottomTabNavigator.setup(this, BottomTabNavigator.Tab.HOME)
         setupLogout()
         observeViewModel()
         observeCart()

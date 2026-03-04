@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Sổ địa chỉ"
+            android:text="Địa chỉ giao hàng"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
