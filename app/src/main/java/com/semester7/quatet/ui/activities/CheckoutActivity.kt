@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.semester7.quatet.databinding.ActivityCheckoutBinding
@@ -17,32 +18,50 @@ class CheckoutActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCheckoutBinding
     private val viewModel: CheckoutViewModel by viewModels()
 
+    private val manageAddressLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK && result.data != null) {
+                val data = result.data!!
+                binding.edtCustomerName.setText(data.getStringExtra(AddressActivity.RESULT_NAME).orEmpty())
+                binding.edtCustomerPhone.setText(data.getStringExtra(AddressActivity.RESULT_PHONE).orEmpty())
+                binding.edtCustomerEmail.setText(data.getStringExtra(AddressActivity.RESULT_EMAIL).orEmpty())
+                binding.edtCustomerAddress.setText(data.getStringExtra(AddressActivity.RESULT_ADDRESS).orEmpty())
+            } else {
+                viewModel.loadDefaultAddress()
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCheckoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 1. Nhận tổng tiền từ màn hình Cart truyền sang
         val totalPrice = intent.getDoubleExtra("EXTRA_TOTAL_PRICE", 0.0)
         displayOrderSummary(totalPrice)
 
-        // 2. Cài đặt sự kiện nút bấm
         setupListeners()
-
-        // 3. Lắng nghe trạng thái từ ViewModel
         observeViewModel()
+
+        viewModel.loadDefaultAddress()
     }
 
     private fun displayOrderSummary(totalPrice: Double) {
         val format = NumberFormat.getCurrencyInstance(Locale("vi", "VN"))
         val formattedPrice = format.format(totalPrice)
 
-        // Đổ lên giao diện
         binding.tvCheckoutSubtotal.text = formattedPrice
-        binding.tvCheckoutTotal.text = formattedPrice // Tạm thời Phí ship = 0
+        binding.tvCheckoutTotal.text = formattedPrice
     }
 
     private fun setupListeners() {
+        binding.btnManageAddress.setOnClickListener {
+            manageAddressLauncher.launch(
+                Intent(this, AddressActivity::class.java).apply {
+                    putExtra(AddressActivity.EXTRA_PICK_ADDRESS_MODE, true)
+                }
+            )
+        }
+
         binding.btnPlaceOrder.setOnClickListener {
             val name = binding.edtCustomerName.text.toString().trim()
             val phone = binding.edtCustomerPhone.text.toString().trim()
@@ -55,42 +74,45 @@ class CheckoutActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            Log.d("CHECKOUT_UI", "Bắt đầu gọi ViewModel xử lý Checkout...")
+            Log.d("CHECKOUT_UI", "Bat dau goi ViewModel xu ly Checkout...")
             viewModel.processCheckout(name, phone, email, address, note)
         }
     }
 
     private fun observeViewModel() {
-        // --- Lắng nghe trạng thái Loading ---
+        viewModel.defaultAddress.observe(this) { address ->
+            if (address != null) {
+                binding.edtCustomerName.setText(address.customername ?: "")
+                binding.edtCustomerPhone.setText(address.customerphone ?: "")
+                binding.edtCustomerEmail.setText(address.customeremail ?: "")
+                binding.edtCustomerAddress.setText(address.addressLine)
+            }
+        }
+
         viewModel.isLoading.observe(this) { isLoading ->
             binding.progressBarCheckout.visibility = if (isLoading) View.VISIBLE else View.GONE
             binding.btnPlaceOrder.isEnabled = !isLoading
         }
 
-        // --- Lắng nghe Lỗi ---
         viewModel.errorMessage.observe(this) { errorMsg ->
             if (!errorMsg.isNullOrEmpty()) {
-                Log.e("CHECKOUT_UI", "Lỗi từ ViewModel: $errorMsg")
+                Log.e("CHECKOUT_UI", "Loi tu ViewModel: $errorMsg")
                 Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show()
                 viewModel.clearMessages()
             }
         }
 
-        // --- DUY NHẤT 1 LẦN Lắng nghe Link VNPay trả về (Luồng WebView) ---
         viewModel.paymentUrl.observe(this) { url ->
             if (!url.isNullOrEmpty()) {
-                Log.d("CHECKOUT_UI", "Nhận được URL VNPay: $url")
+                Log.d("CHECKOUT_UI", "Nhan duoc URL VNPay: $url")
 
-                // Lấy mã Đơn hàng mà ViewModel vừa lưu lại
                 val currentOrderId = viewModel.createdOrderId.value ?: -1
 
-                // CHUYỂN HƯỚNG SANG MÀN HÌNH WEBVIEW CỦA CHÚNG TA
                 val intent = Intent(this, PaymentWebViewActivity::class.java)
                 intent.putExtra("EXTRA_PAYMENT_URL", url)
                 intent.putExtra("EXTRA_ORDER_ID", currentOrderId)
                 startActivity(intent)
 
-                // Đóng màn hình Checkout lại
                 finish()
             }
         }

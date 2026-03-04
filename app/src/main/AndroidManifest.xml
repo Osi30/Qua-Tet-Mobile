@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".QuaTetApplication"
@@ -16,18 +18,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QuaTet"
         android:usesCleartextTraffic="true">
-
-        <!--        <activity-->
-        <!--            android:name=".MainActivity"-->
-        <!--            android:exported="true"-->
-        <!--            android:label="@string/app_name"-->
-        <!--            android:theme="@style/Theme.QuaTet">-->
-        <!--            <intent-filter>-->
-        <!--                <action android:name="android.intent.action.MAIN" />-->
-
-        <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-        <!--            </intent-filter>-->
-        <!--        </activity>-->
+        
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
 
         <activity
             android:name=".ui.activities.ProductActivity"
@@ -53,9 +47,11 @@
         <activity
             android:name=".ui.activities.CartActivity"
             android:exported="false" />
+
         <activity
             android:name=".ui.activities.CheckoutActivity"
             android:exported="false" />
+
         <activity
             android:name=".ui.activities.PaymentWebViewActivity"
             android:exported="false" />
@@ -64,6 +60,13 @@
             android:name=".ui.activities.BillingActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.activities.AddressActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.activities.StoreLocationMapActivity"
+            android:exported="false" />
 
     </application>
 
