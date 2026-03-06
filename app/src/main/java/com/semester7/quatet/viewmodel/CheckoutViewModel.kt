@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+// 1. Đã import lại đúng tên class AccountAddressDTO có trong file AddressDTO.kt của bạn
 import com.semester7.quatet.data.model.AccountAddressDTO
 import com.semester7.quatet.data.model.OrderRequest
 import com.semester7.quatet.data.repository.AddressRepository
@@ -30,6 +31,7 @@ class CheckoutViewModel : ViewModel() {
     private val _createdOrderId = MutableLiveData<Int>()
     val createdOrderId: LiveData<Int> get() = _createdOrderId
 
+    // 2. Trả lại đúng kiểu dữ liệu AccountAddressDTO
     private val _defaultAddress = MutableLiveData<AccountAddressDTO?>()
     val defaultAddress: LiveData<AccountAddressDTO?> get() = _defaultAddress
 
@@ -55,7 +57,7 @@ class CheckoutViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-                Log.d("CHECKOUT_FLOW", "Dang tao Order...")
+                Log.d("CHECKOUT_FLOW", "Đang tạo Order...")
                 val orderRequest = OrderRequest(
                     customerName = name,
                     customerPhone = phone,
@@ -66,37 +68,38 @@ class CheckoutViewModel : ViewModel() {
 
                 val orderResponse = orderRepository.createOrder(orderRequest)
 
-                if (orderResponse != null) {
+                if (orderResponse != null && orderResponse.orderId != null) {
                     val newOrderId = orderResponse.orderId
-                    Log.d("CHECKOUT_FLOW", "Tao Order thanh cong! OrderID: $newOrderId")
+
+                    Log.d("CHECKOUT_FLOW", "Tạo Order thành công! OrderID: $newOrderId")
                     _createdOrderId.value = newOrderId
 
-                    Log.d("CHECKOUT_FLOW", "Dang lay Link VNPay...")
+                    Log.d("CHECKOUT_FLOW", "Đang lấy Link VNPay...")
                     val paymentResponse = paymentRepository.createPaymentUrl(newOrderId, "VNPAY")
 
                     if (paymentResponse != null) {
                         val vnpayUrl = paymentResponse.paymentUrl
 
                         if (!vnpayUrl.isNullOrEmpty()) {
-                            Log.d("CHECKOUT_FLOW", "Lay Link thanh cong: $vnpayUrl")
+                            Log.d("CHECKOUT_FLOW", "Lấy Link thành công: $vnpayUrl")
                             _paymentUrl.value = vnpayUrl
                         } else {
-                            _errorMessage.value = "Chua tim thay link thanh toan tu he thong."
+                            _errorMessage.value = "Chưa tìm thấy link thanh toán từ hệ thống."
                         }
                     } else {
-                        _errorMessage.value = "Khong the tao lien ket thanh toan VNPay luc nay."
+                        _errorMessage.value = "Không thể tạo liên kết thanh toán VNPay lúc này."
                     }
                 } else {
-                    _errorMessage.value = "Tao don hang that bai. Vui long thu lai!"
+                    _errorMessage.value = "Tạo đơn hàng thất bại. Vui lòng thử lại!"
                 }
 
             } catch (e: retrofit2.HttpException) {
                 val errorBody = e.response()?.errorBody()?.string()
-                Log.e("CHECKOUT_FLOW", "Loi Server HTTP ${e.code()}: $errorBody")
-                _errorMessage.value = "Loi Server: $errorBody"
+                Log.e("CHECKOUT_FLOW", "Lỗi Server HTTP ${e.code()}: $errorBody")
+                _errorMessage.value = "Lỗi Server: $errorBody"
             } catch (e: Exception) {
-                Log.e("CHECKOUT_FLOW", "Loi Exception: ${e.message}")
-                _errorMessage.value = e.message ?: "Co loi xay ra trong qua trinh xu ly"
+                Log.e("CHECKOUT_FLOW", "Lỗi Exception: ${e.message}")
+                _errorMessage.value = e.message ?: "Có lỗi xảy ra trong quá trình xử lý"
             } finally {
                 _isLoading.value = false
             }
