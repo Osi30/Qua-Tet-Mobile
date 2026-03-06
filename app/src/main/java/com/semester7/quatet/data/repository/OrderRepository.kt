@@ -1,5 +1,6 @@
 package com.semester7.quatet.data.repository
 
+import android.util.Log
 import com.semester7.quatet.data.model.OrderDTO
 import com.semester7.quatet.data.model.OrderRequest
 import com.semester7.quatet.data.remote.OrderApiService
@@ -9,7 +10,12 @@ class OrderRepository {
     private val apiService = RetrofitClient.createService(OrderApiService::class.java)
 
     suspend fun createOrder(request: OrderRequest): OrderDTO? {
-        // Trả về data (chứa orderId)
         return apiService.createOrder(request).data
+    }
+
+    suspend fun getMyOrders(): List<OrderDTO>? {
+        Log.d("OrderRepository", "Đang gọi API lấy danh sách đơn hàng...")
+        val response = apiService.getMyOrders()
+        return response.data
     }
 }
