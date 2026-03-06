@@ -7,13 +7,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.semester7.quatet.data.model.CategoryDTO
 import com.semester7.quatet.data.model.ProductDTO
+import com.semester7.quatet.data.repository.CartRepository
 import com.semester7.quatet.data.repository.CategoryRepository
 import com.semester7.quatet.data.repository.ProductRepository
 import kotlinx.coroutines.launch
 
 class ProductViewModel : ViewModel() {
-    private val repository = ProductRepository()
+    private val productRepository = ProductRepository()
     private val categoryRepository = CategoryRepository()
+//    private val cartRepository = CartRepository()
 
     // Trạng thái danh sách sản phẩm
     // Encapsulation (Mutable => có thể thay đổi)
@@ -33,6 +35,9 @@ class ProductViewModel : ViewModel() {
     private val _categories = MutableLiveData<List<CategoryDTO>>()
     val categories: LiveData<List<CategoryDTO>> get() = _categories
 
+//    private val _addToCartStatus = MutableLiveData<String?>()
+//    val addToCartStatus: LiveData<String?> get() = _addToCartStatus
+
     // Trạng thái hiện tại (State)
     private var _currentSearch: String? = null
     private var _currentSort: String? = "default"
@@ -51,7 +56,7 @@ class ProductViewModel : ViewModel() {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val response = repository.getProducts(
+                val response = productRepository.getProducts(
                     search = _currentSearch,
                     categories = currentSelectedCategoryIds,
                     sort = _currentSort,
@@ -105,4 +110,20 @@ class ProductViewModel : ViewModel() {
 
         fetchProducts()
     }
+
+//    fun addToCart(productId: Int) {
+//        viewModelScope.launch {
+//            _isLoading.value = true
+//            try {
+//                cartRepository.addItem(productId, 1)
+//                _addToCartStatus.postValue("Đã thêm vào giỏ hàng")
+//            } catch (e: Exception) {
+//                _addToCartStatus.postValue("Lỗi: ${e.message}")
+//            } finally {
+//                _isLoading.postValue(false)
+//            }
+//        }
+//    }
+
+//    fun clearCartStatus() { _addToCartStatus.value = null }
 }

@@ -11,14 +11,11 @@ import java.util.*
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.semester7.quatet.R
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ProductAdapter(
     private var products: List<ProductDTO>,
-    private val onItemClick: (Int) -> Unit
+    private val onItemClick: (Int) -> Unit,
+    private val onAddToCartClick: (ProductDTO) -> Unit
 ) :
     RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
@@ -64,24 +61,7 @@ class ProductAdapter(
 
             // Add to cart (btnAddToCart) — kiểm tra login
             btnAddToCart.setOnClickListener {
-                val context = holder.itemView.context
-                if (!com.semester7.quatet.data.local.SessionManager.isLoggedIn(context)) {
-                    context.startActivity(
-                        android.content.Intent(context, com.semester7.quatet.ui.activities.LoginActivity::class.java)
-                    )
-                } else {
-                    // Gọi API thêm giỏ hàng
-                    kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
-                        try {
-                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-                                com.semester7.quatet.data.repository.CartRepository().addItem(product.productid, 1)
-                            }
-                            android.widget.Toast.makeText(context, "Đã thêm vào giỏ hàng", android.widget.Toast.LENGTH_SHORT).show()
-                        } catch (e: Exception) {
-                            android.widget.Toast.makeText(context, "Lỗi: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
+                onAddToCartClick(product)
             }
         }
     }

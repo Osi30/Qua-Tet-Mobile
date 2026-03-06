@@ -14,6 +14,7 @@ interface ProductApiService {
         @Query("Search") search: String?,
         @Query("Categories") categories: List<Int>?,
         @Query("Sort") sort: String?,
+        @Query("IsSingleProduct") isSingleProduct: Boolean?,
         @Query("MinPrice") minPrice: Double?,
         @Query("MaxPrice") maxPrice: Double?,
         @Query("PageNumber") pageNumber: Int? = null,

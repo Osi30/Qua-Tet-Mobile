@@ -28,108 +28,11 @@
                 android:layout_centerVertical="true"
                 android:fontFamily="serif"
                 android:letterSpacing="0.03"
-                android:text="Tết Gift"
+                android:text="Quà Tết"
                 android:textColor="#111111"
                 android:textSize="30sp"
                 android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/ivMenu"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/bg_circle_button"
-                android:padding="10dp"
-                android:src="@drawable/ic_menu"
-                android:visibility="gone"
-                app:tint="#111111" />
-
-            <ImageView
-                android:id="@+id/ivLogout"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="8dp"
-                android:layout_toStartOf="@id/ivMenu"
-                android:background="@drawable/bg_circle_button"
-                android:padding="9dp"
-                android:src="@drawable/ic_nav_user"
-                android:visibility="gone"
-                app:tint="#111111" />
-
-            <FrameLayout
-                android:id="@+id/layoutCart"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="8dp"
-                android:layout_toStartOf="@id/ivLogout"
-                android:background="@drawable/bg_circle_button"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:visibility="gone">
-
-                <ImageView
-                    android:id="@+id/ivCart"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_cart"
-                    app:tint="#111111" />
-
-                <TextView
-                    android:id="@+id/tvCartBadge"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="top|end"
-                    android:layout_marginTop="-4dp"
-                    android:layout_marginEnd="-4dp"
-                    android:background="@drawable/bg_badge_red"
-                    android:gravity="center"
-                    android:text="0"
-                    android:textColor="@android:color/white"
-                    android:textSize="9sp"
-                    android:textStyle="bold"
-                    android:visibility="gone"
-                    tools:visibility="visible" />
-            </FrameLayout>
         </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <SearchView
-                android:id="@+id/svProduct"
-                android:layout_width="0dp"
-                android:layout_height="44dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_search_view"
-                android:iconifiedByDefault="false"
-                android:imeOptions="actionSearch"
-                android:queryBackground="@android:color/transparent"
-                android:queryHint="Tìm kiếm sản phẩm..."
-                android:submitBackground="@android:color/transparent"
-                android:theme="@style/Theme.AppCompat.Light" />
-
-            <ImageView
-                android:id="@+id/tvFilter"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/bg_nav_home_active"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="10dp"
-                android:src="@drawable/ic_filter_list"
-                app:tint="@android:color/white" />
-        </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -172,16 +75,40 @@
             </LinearLayout>
         </FrameLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvQuickCategories"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
-            android:clipToPadding="false"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_quick_category" />
+            android:layout_marginEnd="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <SearchView
+                android:id="@+id/svProduct"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_search_view"
+                android:iconifiedByDefault="false"
+                android:imeOptions="actionSearch"
+                android:queryBackground="@android:color/transparent"
+                android:queryHint="Tìm kiếm sản phẩm..."
+                android:submitBackground="@android:color/transparent"
+                android:theme="@style/Theme.AppCompat.Light" />
+
+            <ImageView
+                android:id="@+id/tvFilter"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_nav_home_active"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="10dp"
+                android:src="@drawable/ic_filter_list"
+                app:tint="@android:color/white" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

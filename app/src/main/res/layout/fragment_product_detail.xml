@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA"> <ScrollView
+    android:background="#F8F9FA">
+
+    <ScrollView
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="0dp"
@@ -170,11 +172,10 @@
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        android:elevation="16dp"
         android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="12dp"
+        android:padding="12dp"
+        android:background="@color/white"
+        android:elevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.button.MaterialButton
@@ -182,29 +183,26 @@
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="54dp"
-            android:layout_marginEnd="12dp"
             android:layout_weight="1"
+            android:layout_marginEnd="8dp"
             android:text="Thêm vào giỏ"
-            android:textAllCaps="false"
-            android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="#D32F2F"
             app:cornerRadius="12dp"
-            app:strokeColor="#D32F2F"
-            app:strokeWidth="1.5dp"/>
+            app:strokeWidth="2dp"
+            app:strokeColor="#D32F2F" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnBuyNow"
             android:layout_width="0dp"
             android:layout_height="54dp"
-            android:layout_weight="1.2"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
             android:backgroundTint="#D32F2F"
             android:text="Mua ngay"
-            android:textAllCaps="false"
-            android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
-            app:cornerRadius="12dp"/>
+            app:cornerRadius="12dp" />
     </LinearLayout>
 
     <ProgressBar
@@ -216,5 +214,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/loadingOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone"
+        />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

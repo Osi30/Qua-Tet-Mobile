@@ -66,11 +66,6 @@ class ProductDetailFragment : Fragment(R.layout.fragment_product_detail) {
         observeViewModel()
         observeCartViewModel()
 
-        // Đảm bảo dữ liệu giỏ hàng luôn mới nhất khi vào màn hình
-        if (SessionManager.isLoggedIn(requireContext())) {
-            cartViewModel.fetchCart()
-        }
-
         binding.btnBack.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
@@ -166,50 +161,20 @@ class ProductDetailFragment : Fragment(R.layout.fragment_product_detail) {
                     startActivity(Intent(requireContext(), LoginActivity::class.java))
                 } else {
                     cartViewModel.addItem(product.productid, 1)
-                    Toast.makeText(requireContext(), "Đã ném vào giỏ hàng!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
     private fun observeCartViewModel() {
-        cartViewModel.cart.observe(viewLifecycleOwner) { cart ->
-            val count = cart?.itemCount ?: 0
-            updateCartBadgeUI(count)
+        cartViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.loadingOverlay.visibility =  if (isLoading) View.VISIBLE else View.GONE
+            binding.btnAddToCart.isEnabled = !isLoading
+            binding.btnBuyNow.isEnabled = !isLoading
+            binding.imgAddToCart.isEnabled = !isLoading
+            binding.bottomBar.alpha = if (isLoading) 0.6f else 1.0f
         }
-
-        cartViewModel.shouldShowNotification.observe(viewLifecycleOwner) { message ->
-            message?.let {
-                val totalItems = cartViewModel.cart.value?.itemCount ?: 0
-                if (totalItems > 0) {
-                    NotificationHelper.showCartNotification(
-                        requireContext(),
-                        getString(R.string.app_name),
-                        "Giỏ hàng hiện có $totalItems sản phẩm. $it",
-                        totalItems
-                    )
-                }
-                cartViewModel.clearMessages()
-            }
-        }
-
-        cartViewModel.successMessage.observe(viewLifecycleOwner) { message ->
-            if (!message.isNullOrEmpty()) {
-                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-                cartViewModel.clearMessages()
-            }
-        }
-
-        cartViewModel.errorMessage.observe(viewLifecycleOwner) { error ->
-            if (!error.isNullOrEmpty()) {
-                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
-                cartViewModel.clearMessages()
-            }
-        }
-    }
-
-    private fun updateCartBadgeUI(count: Int) {
-        Log.d("CART_DEBUG", "Số lượng sản phẩm hiện tại: $count")
     }
 
     override fun onDestroyView() {

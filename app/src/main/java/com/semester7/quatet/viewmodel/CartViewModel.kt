@@ -65,6 +65,7 @@ class CartViewModel : ViewModel() {
 
                 // Trigger thông báo hệ thống (Notification Badge)
                 _shouldShowNotification.value = "Sản phẩm đã được thêm vào giỏ hàng thành công!"
+                _successMessage.value = "Thêm vào giỏ hàng thành công!"
 
                 Log.d("CART_VM", "Add Item Success: Product ID $productId")
             } catch (e: Exception) {

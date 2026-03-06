@@ -7,63 +7,63 @@ import androidx.recyclerview.widget.RecyclerView
 import com.semester7.quatet.R
 import com.semester7.quatet.databinding.ItemQuickCategoryBinding
 
-data class QuickCategoryItem(
-    val id: Int?,
-    val label: String
-)
+//data class QuickCategoryItem(
+//    val id: Int?,
+//    val label: String
+//)
 
-class QuickCategoryAdapter(
-    private var items: List<QuickCategoryItem>,
-    private val onSelected: (Int?) -> Unit
-) : RecyclerView.Adapter<QuickCategoryAdapter.QuickCategoryViewHolder>() {
+//class QuickCategoryAdapter(
+//    private var items: List<QuickCategoryItem>,
+//    private val onSelected: (Int?) -> Unit
+//) : RecyclerView.Adapter<QuickCategoryAdapter.QuickCategoryViewHolder>() {
 
-    private var selectedCategoryId: Int? = null
+//    private var selectedCategoryId: Int? = null
 
-    class QuickCategoryViewHolder(val binding: ItemQuickCategoryBinding) :
-        RecyclerView.ViewHolder(binding.root)
+//    class QuickCategoryViewHolder(val binding: ItemQuickCategoryBinding) :
+//        RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuickCategoryViewHolder {
-        val binding = ItemQuickCategoryBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
-        return QuickCategoryViewHolder(binding)
-    }
+//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuickCategoryViewHolder {
+//        val binding = ItemQuickCategoryBinding.inflate(
+//            LayoutInflater.from(parent.context),
+//            parent,
+//            false
+//        )
+//        return QuickCategoryViewHolder(binding)
+//    }
 
-    override fun onBindViewHolder(holder: QuickCategoryViewHolder, position: Int) {
-        val item = items[position]
-        val isSelected = item.id == selectedCategoryId
+//    override fun onBindViewHolder(holder: QuickCategoryViewHolder, position: Int) {
+////        val item = items[position]
+////        val isSelected = item.id == selectedCategoryId
+//
+//        with(holder.binding.tvQuickCategory) {
+////            text = item.label
+//            background = ContextCompat.getDrawable(
+//                context,
+//                if (isSelected) R.drawable.bg_quick_category_active
+//                else R.drawable.bg_quick_category_inactive
+//            )
+//            setTextColor(
+//                ContextCompat.getColor(
+//                    context,
+//                    if (isSelected) android.R.color.white else R.color.gray_text
+//                )
+//            )
 
-        with(holder.binding.tvQuickCategory) {
-            text = item.label
-            background = ContextCompat.getDrawable(
-                context,
-                if (isSelected) R.drawable.bg_quick_category_active
-                else R.drawable.bg_quick_category_inactive
-            )
-            setTextColor(
-                ContextCompat.getColor(
-                    context,
-                    if (isSelected) android.R.color.white else R.color.gray_text
-                )
-            )
+//            setOnClickListener {
+//                val previousIndex = items.indexOfFirst { it.id == selectedCategoryId }
+//                selectedCategoryId = item.id
+//                if (previousIndex >= 0) notifyItemChanged(previousIndex)
+//                notifyItemChanged(position)
+//                onSelected(item.id)
+//            }
+//        }
+//    }
 
-            setOnClickListener {
-                val previousIndex = items.indexOfFirst { it.id == selectedCategoryId }
-                selectedCategoryId = item.id
-                if (previousIndex >= 0) notifyItemChanged(previousIndex)
-                notifyItemChanged(position)
-                onSelected(item.id)
-            }
-        }
-    }
+//    override fun getItemCount(): Int = items.size
 
-    override fun getItemCount(): Int = items.size
-
-    fun updateData(newItems: List<QuickCategoryItem>, selectedId: Int?) {
-        items = newItems
-        selectedCategoryId = selectedId
-        notifyDataSetChanged()
-    }
-}
+//    fun updateData(newItems: List<QuickCategoryItem>, selectedId: Int?) {
+//        items = newItems
+//        selectedCategoryId = selectedId
+//        notifyDataSetChanged()
+//    }
+//}

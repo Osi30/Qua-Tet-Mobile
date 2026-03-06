@@ -17,6 +17,7 @@ class ProductRepository {
         search = if (search.isNullOrBlank()) null else search,
         categories = if (categories.isNullOrEmpty()) null else categories,
         sort = sort,
+        isSingleProduct = true,
         minPrice = minPrice,
         maxPrice = maxPrice
     )
