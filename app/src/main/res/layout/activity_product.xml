@@ -14,25 +14,18 @@
         android:orientation="vertical"
         android:paddingBottom="8dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvStoreTitle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp">
-
-            <TextView
-                android:id="@+id/tvStoreTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:fontFamily="serif"
-                android:letterSpacing="0.03"
-                android:text="Quà Tết"
-                android:textColor="#111111"
-                android:textSize="30sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+            android:fontFamily="serif"
+            android:letterSpacing="0.03"
+            android:text="Quà Tết"
+            android:textColor="#111111"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
         <FrameLayout
             android:layout_width="match_parent"
