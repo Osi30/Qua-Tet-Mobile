@@ -4,35 +4,55 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FBF5E8"> <TextView
-    android:id="@+id/tvHeaderCheckout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Thanh Toán"
-    android:textSize="20sp"
-    android:textStyle="bold"
-    android:textColor="#FFFFFF"
-    android:background="#690000"
-    android:padding="16dp"
-    android:gravity="center"
-    app:layout_constraintTop_toTopOf="parent"/>
+    android:background="#FBF5E8">
+
+    <RelativeLayout
+        android:id="@+id/layoutHeaderCheckout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#690000"
+        android:paddingVertical="12dp"
+        android:paddingHorizontal="12dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnBackToCart"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:contentDescription="Quay lại giỏ hàng"
+            android:padding="8dp"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="@android:color/white" />
+
+        <TextView
+            android:id="@+id/tvHeaderCheckout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Thanh toán"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/progressBarCheckout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:elevation="10dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/tvHeaderCheckout"
-        app:layout_constraintBottom_toTopOf="@id/bottomBarLayout">
+        app:layout_constraintBottom_toTopOf="@id/bottomBarLayout"
+        app:layout_constraintTop_toBottomOf="@id/layoutHeaderCheckout">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,9 +64,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:cardBackgroundColor="#FFFFFF">
+                app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -54,58 +74,77 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Thông tin giao hàng"
-                        android:textStyle="bold"
-                        android:textSize="18sp"
-                        android:textColor="#690000"
-                        android:layout_marginBottom="12dp"/>
+                        android:layout_marginBottom="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Thông tin giao hàng"
+                            android:textColor="#690000"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/btnManageAddress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:backgroundTint="#8B0000"
+                            android:text="Địa chỉ giao hàng"
+                            android:textAllCaps="false"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
                     <EditText
                         android:id="@+id/edtCustomerName"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:hint="Họ và tên *"
-                        android:inputType="textPersonName"
+                        android:layout_marginBottom="8dp"
                         android:background="@android:drawable/edit_text"
-                        android:layout_marginBottom="8dp"/>
+                        android:hint="Họ và tên *"
+                        android:inputType="textPersonName" />
 
                     <EditText
                         android:id="@+id/edtCustomerPhone"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:hint="Số điện thoại *"
-                        android:inputType="phone"
+                        android:layout_marginBottom="8dp"
                         android:background="@android:drawable/edit_text"
-                        android:layout_marginBottom="8dp"/>
+                        android:hint="Số điện thoại *"
+                        android:inputType="phone" />
 
                     <EditText
                         android:id="@+id/edtCustomerEmail"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:hint="Email *"
-                        android:inputType="textEmailAddress"
+                        android:layout_marginBottom="8dp"
                         android:background="@android:drawable/edit_text"
-                        android:layout_marginBottom="8dp"/>
+                        android:hint="Email *"
+                        android:inputType="textEmailAddress" />
 
                     <EditText
                         android:id="@+id/edtCustomerAddress"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:hint="Địa chỉ cụ thể (Số nhà, tên đường...) *"
-                        android:inputType="textPostalAddress"
+                        android:layout_marginBottom="8dp"
                         android:background="@android:drawable/edit_text"
-                        android:layout_marginBottom="8dp"/>
+                        android:hint="Địa chỉ cụ thể *"
+                        android:inputType="textPostalAddress" />
 
                     <EditText
                         android:id="@+id/edtNote"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:hint="Ghi chú (Tùy chọn)"
-                        android:inputType="textMultiLine"
-                        android:background="@android:drawable/edit_text"/>
+                        android:background="@android:drawable/edit_text"
+                        android:hint="Ghi chú (tùy chọn)"
+                        android:inputType="textMultiLine" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -113,9 +152,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:cardBackgroundColor="#FFFFFF">
+                app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -126,28 +165,29 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
                         android:text="Phương thức thanh toán"
-                        android:textStyle="bold"
-                        android:textSize="18sp"
                         android:textColor="#690000"
-                        android:layout_marginBottom="12dp"/>
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                     <RadioButton
                         android:id="@+id/rbVnpay"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Thanh toán qua VNPAY"
+                        android:buttonTint="#4CAF50"
                         android:checked="true"
-                        android:textStyle="bold"
-                        android:buttonTint="#4CAF50"/> </LinearLayout>
+                        android:text="Thanh toán qua VNPAY"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:cardBackgroundColor="#FFFFFF">
+                app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -158,28 +198,30 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
                         android:text="Đơn hàng của bạn"
-                        android:textStyle="bold"
-                        android:textSize="18sp"
                         android:textColor="#690000"
-                        android:layout_marginBottom="12dp"/>
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
+
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Tạm tính:"
-                            android:textColor="#757575"/>
+                            android:textColor="#757575" />
+
                         <TextView
                             android:id="@+id/tvCheckoutSubtotal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0đ"
-                            android:textColor="#000000"/>
+                            android:textColor="#000000" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -187,17 +229,19 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:orientation="horizontal">
+
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Phí vận chuyển:"
-                            android:textColor="#757575"/>
+                            android:textColor="#757575" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0đ"
-                            android:textColor="#000000"/>
+                            android:textColor="#000000" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -208,45 +252,46 @@
         android:id="@+id/bottomBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
         android:background="#FFFFFF"
         android:elevation="16dp"
+        android:orientation="horizontal"
+        android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tổng cộng:"
-                android:textColor="#757575"/>
+                android:textColor="#757575" />
 
             <TextView
                 android:id="@+id/tvCheckoutTotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0đ"
-                android:textStyle="bold"
+                android:textColor="#DE7B35"
                 android:textSize="20sp"
-                android:textColor="#DE7B35"/> </LinearLayout>
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnPlaceOrder"
             android:layout_width="wrap_content"
             android:layout_height="56dp"
+            android:backgroundTint="#690000"
+            android:paddingHorizontal="32dp"
             android:text="ĐẶT HÀNG"
+            android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#690000"
-            app:cornerRadius="12dp"
-            android:paddingHorizontal="32dp"/>
+            app:cornerRadius="12dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

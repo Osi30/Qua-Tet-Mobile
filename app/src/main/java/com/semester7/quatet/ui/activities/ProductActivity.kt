@@ -3,16 +3,18 @@ package com.semester7.quatet.ui.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.PopupMenu
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.semester7.quatet.R
 import com.semester7.quatet.data.local.SessionManager
 import com.semester7.quatet.data.remote.RetrofitClient
 import com.semester7.quatet.databinding.ActivityProductBinding
 import com.semester7.quatet.ui.adapters.ProductAdapter
+import com.semester7.quatet.ui.adapters.QuickCategoryAdapter
+import com.semester7.quatet.ui.adapters.QuickCategoryItem
 import com.semester7.quatet.ui.screens.ProductDetailFragment
 import com.semester7.quatet.ui.screens.ProductFilterSheet
 import com.semester7.quatet.ui.screens.ProductSortSheet
@@ -23,12 +25,14 @@ import com.semester7.quatet.viewmodel.ProductViewModel
 class ProductActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductBinding
     private lateinit var adapter: ProductAdapter
+    private lateinit var quickCategoryAdapter: QuickCategoryAdapter
 
     private val viewModel: ProductViewModel by viewModels()
     private val cartViewModel: CartViewModel by viewModels()
 
     private var filterSheet: ProductFilterSheet? = null
     private var sortSheet: ProductSortSheet? = null
+    private var selectedQuickCategoryId: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +44,10 @@ class ProductActivity : AppCompatActivity() {
         NotificationHelper.createNotificationChannel(this)
 
         setupRecyclerView()
+        setupQuickCategories()
         setupSearch()
+        setupHeaderMenu()
+        BottomTabNavigator.setup(this, BottomTabNavigator.Tab.HOME)
         setupLogout()
         observeViewModel()
         observeCart()
@@ -72,22 +79,22 @@ class ProductActivity : AppCompatActivity() {
             val count = cart?.itemCount ?: 0
 
             if (count > 0) {
-                // Hiển thị số lượng trong App
+                // Hien thi so luong trong app
                 binding.tvCartBadge.visibility = View.VISIBLE
                 binding.tvCartBadge.text = if (count > 99) "99+" else count.toString()
 
-                // Hiển thị số lượng ngoài Icon App thông qua thư viện
+                // Hien thi so luong ngoai icon app thong qua thu vien
                 NotificationHelper.showCartNotification(
                     this,
                     getString(R.string.app_name),
-                    "Bạn đang có $count sản phẩm trong giỏ hàng.",
+                    "Ban dang co $count san pham trong gio hang.",
                     count
                 )
             } else {
-                // Ẩn số lượng trong App
+                // An so luong trong app
                 binding.tvCartBadge.visibility = View.GONE
 
-                // Dọn dẹp số lượng ngoài Icon App và tắt thông báo thanh trạng thái
+                // Don dep so luong ngoai icon app va tat thong bao
                 NotificationHelper.clearBadge(this)
             }
         }
@@ -98,6 +105,19 @@ class ProductActivity : AppCompatActivity() {
             navigateToDetail(productId)
         }
         binding.rvProducts.adapter = adapter
+    }
+
+    private fun setupQuickCategories() {
+        quickCategoryAdapter = QuickCategoryAdapter(emptyList()) { categoryId ->
+            selectedQuickCategoryId = categoryId
+            val selectedIds = categoryId?.let { listOf(it) } ?: emptyList()
+            viewModel.currentSelectedCategoryIds = selectedIds
+            viewModel.updateFilters(categories = selectedIds)
+        }
+
+        binding.rvQuickCategories.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvQuickCategories.adapter = quickCategoryAdapter
     }
 
     private fun navigateToDetail(productId: Int) {
@@ -120,6 +140,24 @@ class ProductActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
+        viewModel.categories.observe(this) { categories ->
+            val quickItems = mutableListOf(QuickCategoryItem(id = null, label = "All"))
+            quickItems.addAll(
+                categories.orEmpty().map { category ->
+                    QuickCategoryItem(
+                        id = category.categoryid,
+                        label = category.categoryname
+                    )
+                }
+            )
+
+            val validSelection = selectedQuickCategoryId?.takeIf { selectedId ->
+                categories.orEmpty().any { it.categoryid == selectedId }
+            }
+            selectedQuickCategoryId = validSelection
+            quickCategoryAdapter.updateData(quickItems, selectedQuickCategoryId)
+        }
+
         viewModel.products.observe(this) { productList ->
             if (productList.isNullOrEmpty()) {
                 binding.rvProducts.visibility = View.GONE
@@ -166,32 +204,40 @@ class ProductActivity : AppCompatActivity() {
         })
     }
 
-    private fun setupLogout() {
-        updateLogoutVisibility()
-        binding.ivLogout.setOnClickListener {
-            AlertDialog.Builder(this)
-                .setTitle("Đăng xuất")
-                .setMessage("Bạn có muốn đăng xuất không?")
-                .setPositiveButton("Đăng xuất") { _, _ ->
-                    SessionManager.clearSession(this)
+    private fun setupHeaderMenu() {
+        binding.ivMenu.setOnClickListener { anchor ->
+            val popup = PopupMenu(this, anchor)
+            popup.menuInflater.inflate(R.menu.menu_header_options, popup.menu)
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.menu_address_book -> {
+                        startActivity(Intent(this, AddressActivity::class.java))
+                        true
+                    }
 
-                    // XÓA SẠCH Icon Badge khi đăng xuất
-                    NotificationHelper.clearBadge(this)
+                    R.id.menu_store_locations -> {
+                        startActivity(Intent(this, StoreLocationMapActivity::class.java))
+                        true
+                    }
 
-                    Toast.makeText(this, "Đã đăng xuất", Toast.LENGTH_SHORT).show()
+                    R.id.menu_chat_support -> {
+                        startActivity(Intent(this, ChatActivity::class.java))
+                        true
+                    }
 
-                    // Chuyển về LoginActivity và xóa toàn bộ back stack
-                    val intent = Intent(this, LoginActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-                    finish()
+                    else -> false
                 }
-                .setNegativeButton("Hủy", null)
-                .show()
+            }
+            popup.show()
         }
     }
 
+    private fun setupLogout() {
+        // Trang homepage hien tai khong su dung nut dang xuat o header
+        binding.ivLogout.visibility = View.GONE
+    }
+
     private fun updateLogoutVisibility() {
-        binding.ivLogout.visibility = if (SessionManager.isLoggedIn(this)) View.VISIBLE else View.GONE
+        binding.ivLogout.visibility = View.GONE
     }
 }

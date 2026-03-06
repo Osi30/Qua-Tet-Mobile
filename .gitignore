@@ -41,3 +41,28 @@ replay_pid*
 .externalNativeBuild
 .cxx
 local.properties
+
+# Android/Gradle
+/app/build/
+/*/build/
+.gradle/
+**/build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# IDE
+.idea/
+*.iml
+
+# Local config
+local.properties
+
+# Signing / secrets
+*.jks
+*.keystore
+keystore.properties
+google-services.json
+*.env
+.env*
+.cmake/

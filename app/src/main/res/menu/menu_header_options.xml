@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_address_book"
+        android:title="Địa chỉ giao hàng" />
+    <item
+        android:id="@+id/menu_store_locations"
+        android:title="Cửa hàng" />
+    <item
+        android:id="@+id/menu_chat_support"
+        android:title="Chat hỗ trợ" />
+</menu>

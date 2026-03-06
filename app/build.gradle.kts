@@ -16,6 +16,7 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+        manifestPlaceholders["MAPS_API_KEY"] = (project.findProperty("MAPS_API_KEY") as String?) ?: ""
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -67,27 +68,25 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    // Retrofit: Thư viện kết nối API chính
     implementation(libs.retrofit)
 
-    // Kotlin Serialization Converter: Giúp Retrofit hiểu được JSON
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.kotlinx.serialization.json)
 
-    // OkHttp Logging Interceptor: Để debug, giúp xem API gọi đi và trả về gì ở Logcat
     implementation(libs.logging.interceptor)
 
-    // Thư viện Load ảnh
     implementation(libs.coil)
 
-    // Đảm bảo Range Slider hoạt động mà không văng app
     implementation(libs.material.v190)
 
-    // Hỗ trợ ViewModels cho Activity
     implementation(libs.androidx.activity.ktx)
 
-    // Hỗ trợ ViewModels cho Fragment (activityViewModels...)
     implementation(libs.androidx.fragment.ktx)
-    // Thư viện hỗ trợ ép hiển thị số lượng Badge trên Icon
     implementation("me.leolin:ShortcutBadger:1.1.22@aar")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation("com.google.android.libraries.places:places:3.5.0")
+    implementation("org.osmdroid:osmdroid-android:6.1.20")
+    implementation("com.microsoft.signalr:signalr:8.0.7")
+    implementation("io.reactivex.rxjava3:rxjava:3.1.8")
 }
+
