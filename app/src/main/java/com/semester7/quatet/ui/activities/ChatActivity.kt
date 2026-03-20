@@ -1,13 +1,19 @@
 package com.semester7.quatet.ui.activities
 
+import android.os.Handler
 import android.os.Bundle
+import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.semester7.quatet.data.local.ChatUnreadManager
 import com.semester7.quatet.data.local.SessionManager
 import com.semester7.quatet.data.remote.RetrofitClient
+import com.semester7.quatet.data.remote.TypingEvent
 import com.semester7.quatet.data.remote.ChatSignalRClient
 import com.semester7.quatet.databinding.ActivityChatBinding
 import com.semester7.quatet.ui.adapters.ChatMessageAdapter
@@ -19,7 +25,10 @@ class ChatActivity : AppCompatActivity() {
     private val viewModel: ChatViewModel by viewModels()
     private lateinit var adapter: ChatMessageAdapter
     private lateinit var signalRClient: ChatSignalRClient
-    private var joinedConversationId: Int? = null
+    private var currentUserId: Int = -1
+    private val typingHandler = Handler(Looper.getMainLooper())
+    private var stopTypingRunnable: Runnable? = null
+    private var isTypingActive = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,13 +41,14 @@ class ChatActivity : AppCompatActivity() {
         setupListeners()
         observeViewModel()
         setupSignalR()
+        ChatUnreadManager.setUnread(this, false)
 
         viewModel.loadConversationAndMessages()
     }
 
     private fun setupRecyclerView() {
-        val accountId = SessionManager.getAccountId(this)
-        adapter = ChatMessageAdapter(currentUserId = accountId)
+        currentUserId = SessionManager.getAccountId(this)
+        adapter = ChatMessageAdapter(currentUserId = currentUserId)
 
         binding.rvMessages.layoutManager = LinearLayoutManager(this).apply {
             stackFromEnd = true
@@ -53,10 +63,38 @@ class ChatActivity : AppCompatActivity() {
             if (content.isBlank()) return@setOnClickListener
             viewModel.sendMessage(content)
             binding.edtMessage.setText("")
-            val conversationId = viewModel.conversationId.value
-            if (conversationId != null) {
-                signalRClient.sendTyping(conversationId, false)
+            stopTyping()
+        }
+
+        binding.edtMessage.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+            override fun afterTextChanged(s: Editable?) {
+                handleTypingInput(s?.toString().orEmpty())
             }
+        })
+    }
+
+    private fun handleTypingInput(text: String) {
+        val conversationId = viewModel.conversationId.value ?: return
+        if (text.isBlank()) {
+            stopTyping()
+            return
+        }
+
+        if (!isTypingActive) {
+            signalRClient.sendTyping(conversationId, true)
+            isTypingActive = true
+        }
+
+        stopTypingRunnable?.let { typingHandler.removeCallbacks(it) }
+        stopTypingRunnable = Runnable {
+            if (isTypingActive) {
+                signalRClient.sendTyping(conversationId, false)
+                isTypingActive = false
+            }
+        }.also {
+            typingHandler.postDelayed(it, 1_500L)
         }
     }
 
@@ -79,7 +117,8 @@ class ChatActivity : AppCompatActivity() {
 
         viewModel.conversationId.observe(this) { conversationId ->
             if (conversationId != null) {
-                connectAndJoinConversation(conversationId)
+                binding.tvTypingIndicator.visibility = View.GONE
+                signalRClient.switchConversation(conversationId)
             }
         }
 
@@ -93,12 +132,27 @@ class ChatActivity : AppCompatActivity() {
 
     private fun setupSignalR() {
         signalRClient.setCallbacks(
-            onReceiveMessage = {
+            onReceiveMessage = { message ->
                 runOnUiThread {
-                    viewModel.refreshMessages(silent = true)
+                    viewModel.handleIncomingMessage(message)
+                    if (message.senderId != currentUserId) {
+                        viewModel.markConversationRead()
+                        ChatUnreadManager.setUnread(this, false)
+                        binding.tvTypingIndicator.visibility = View.GONE
+                    }
                 }
             },
-            onTypingChanged = { _ -> },
+            onTypingChanged = { event ->
+                runOnUiThread { handleTypingEvent(event) }
+            },
+            onMessagesRead = { readEvent ->
+                runOnUiThread {
+                    val currentConversationId = viewModel.conversationId.value
+                    if (currentConversationId == readEvent.conversationId) {
+                        viewModel.handleMessagesRead(readEvent.messageIds)
+                    }
+                }
+            },
             onError = { error ->
                 runOnUiThread {
                     Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
@@ -107,35 +161,43 @@ class ChatActivity : AppCompatActivity() {
         )
     }
 
-    private fun connectAndJoinConversation(conversationId: Int) {
-        if (joinedConversationId == conversationId) return
+    private fun handleTypingEvent(event: TypingEvent) {
+        val currentConversationId = viewModel.conversationId.value ?: return
+        if (event.conversationId != currentConversationId) return
+        if (event.userId == currentUserId) return
 
-        val previousId = joinedConversationId
-        signalRClient.connect {
-            if (previousId != null) {
-                signalRClient.leaveConversation(previousId)
-            }
-            signalRClient.joinConversation(conversationId)
-            joinedConversationId = conversationId
-        }
+        binding.tvTypingIndicator.visibility = if (event.isTyping) View.VISIBLE else View.GONE
+    }
+
+    private fun stopTyping() {
+        stopTypingRunnable?.let { typingHandler.removeCallbacks(it) }
+        stopTypingRunnable = null
+        if (!isTypingActive) return
+        val conversationId = viewModel.conversationId.value ?: return
+        signalRClient.sendTyping(conversationId, false)
+        isTypingActive = false
+    }
+
+    private fun resetTypingUi() {
+        stopTypingRunnable?.let { typingHandler.removeCallbacks(it) }
+        stopTypingRunnable = null
+        isTypingActive = false
+        binding.tvTypingIndicator.visibility = View.GONE
     }
 
     override fun onStart() {
         super.onStart()
-        val conversationId = viewModel.conversationId.value
-        if (conversationId != null) {
-            connectAndJoinConversation(conversationId)
+        ChatUnreadManager.setUnread(this, false)
+        signalRClient.connect()
+        viewModel.conversationId.value?.let { conversationId ->
+            signalRClient.switchConversation(conversationId)
         }
     }
 
     override fun onStop() {
         super.onStop()
-        joinedConversationId?.let { signalRClient.leaveConversation(it) }
+        stopTyping()
+        resetTypingUi()
         signalRClient.disconnect()
-        joinedConversationId = null
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 }

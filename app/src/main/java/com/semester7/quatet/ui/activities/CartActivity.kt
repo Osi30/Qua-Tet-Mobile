@@ -150,4 +150,9 @@ class CartActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        BottomTabNavigator.refreshChatBadge(this)
+    }
 }

@@ -140,7 +140,7 @@ class CartViewModel : ViewModel() {
                 val errorJson = e.response()?.errorBody()?.string()
                 if (errorJson != null) {
                     val baseResponse = json.decodeFromString<BaseResponse<Unit>>(errorJson)
-                    baseResponse.msg
+                    baseResponse.msg ?: defaultMsg
                 } else defaultMsg
             } catch (_: Exception) {
                 "Lỗi hệ thống (${e.code()})"

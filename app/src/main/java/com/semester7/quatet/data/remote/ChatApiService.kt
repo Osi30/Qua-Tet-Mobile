@@ -4,6 +4,7 @@ import com.semester7.quatet.data.model.BaseResponse
 import com.semester7.quatet.data.model.ChatConversationDTO
 import com.semester7.quatet.data.model.ChatMessageDTO
 import com.semester7.quatet.data.model.SendChatMessageRequest
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -22,6 +23,6 @@ interface ChatApiService {
     suspend fun sendMessage(@Body request: SendChatMessageRequest): BaseResponse<ChatMessageDTO>
 
     @PUT("api/chat/read/{conversationId}")
-    suspend fun markRead(@Path("conversationId") conversationId: Int): BaseResponse<String?>
+    suspend fun markRead(@Path("conversationId") conversationId: Int): Response<Unit>
 }
 

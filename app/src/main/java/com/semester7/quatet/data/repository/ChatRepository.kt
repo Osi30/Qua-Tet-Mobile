@@ -22,7 +22,10 @@ class ChatRepository {
     }
 
     suspend fun markRead(conversationId: Int) {
-        apiService.markRead(conversationId)
+        val response = apiService.markRead(conversationId)
+        if (!response.isSuccessful) {
+            throw IllegalStateException("Khong the danh dau da doc (${response.code()})")
+        }
     }
 }
 

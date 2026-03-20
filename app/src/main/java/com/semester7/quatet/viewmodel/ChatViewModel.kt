@@ -56,7 +56,7 @@ class ChatViewModel : ViewModel() {
                 repository.markRead(id)
             } catch (e: Exception) {
                 if (!silent) {
-                    _errorMessage.value = e.message ?: "Khong the tai tin nhan"
+                    _errorMessage.value = e.message ?: "Không thể tải tin nhan"
                 }
             } finally {
                 if (!silent) _isLoading.value = false
@@ -73,11 +73,45 @@ class ChatViewModel : ViewModel() {
             try {
                 val sent = repository.sendMessage(trimmed, orderId = null)
                 if (_conversationId.value == null) _conversationId.value = sent.conversationId
-                refreshMessages(silent = true)
+                handleIncomingMessage(sent)
             } catch (e: Exception) {
                 _errorMessage.value = e.message ?: "Khong the gui tin nhan"
             } finally {
                 _isSending.value = false
+            }
+        }
+    }
+
+    fun handleIncomingMessage(message: ChatMessageDTO) {
+        if (_conversationId.value == null) {
+            _conversationId.value = message.conversationId
+        }
+        if (_conversationId.value != message.conversationId) return
+
+        val current = _messages.value.orEmpty().toMutableList()
+        val existingIndex = current.indexOfFirst { it.id == message.id }
+        if (existingIndex >= 0) {
+            current[existingIndex] = message
+        } else {
+            current.add(message)
+        }
+        _messages.value = current.sortedBy { it.id }
+    }
+
+    fun handleMessagesRead(messageIds: List<Int>) {
+        if (messageIds.isEmpty()) return
+        val idSet = messageIds.toSet()
+        _messages.value = _messages.value.orEmpty().map { message ->
+            if (idSet.contains(message.id)) message.copy(isRead = true) else message
+        }
+    }
+
+    fun markConversationRead() {
+        val id = _conversationId.value ?: return
+        viewModelScope.launch {
+            try {
+                repository.markRead(id)
+            } catch (_: Exception) {
             }
         }
     }

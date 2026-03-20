@@ -2,14 +2,25 @@ package com.semester7.quatet.ui.activities
 
 import android.app.Activity
 import android.content.Intent
-import android.widget.ImageView
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.view.View
+import androidx.activity.ComponentActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.semester7.quatet.R
+import com.semester7.quatet.data.local.ChatUnreadManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 object BottomTabNavigator {
+    private const val CHAT_BADGE_POLL_INTERVAL_MS = 15_000L
 
     enum class Tab {
         STORE_LOCATION,
@@ -37,6 +48,9 @@ object BottomTabNavigator {
         }
 
         setActiveState(activity, current)
+        renderChatBadge(activity, ChatUnreadManager.hasUnread(activity))
+        refreshChatBadge(activity)
+        startChatBadgePolling(activity)
     }
 
     private fun setActiveState(activity: Activity, current: Tab) {
@@ -87,5 +101,41 @@ object BottomTabNavigator {
         }
         activity.startActivity(intent)
         activity.overridePendingTransition(0, 0)
+    }
+
+    fun refreshChatBadge(activity: Activity) {
+        renderChatBadge(activity, ChatUnreadManager.hasUnread(activity))
+        val lifecycleActivity = activity as? ComponentActivity ?: return
+        lifecycleActivity.lifecycleScope.launch {
+            val unread = withContext(Dispatchers.IO) {
+                ChatUnreadManager.refreshFromServer(activity.applicationContext)
+            }
+            renderChatBadge(activity, unread)
+        }
+    }
+
+    fun setChatUnread(activity: Activity, hasUnread: Boolean) {
+        ChatUnreadManager.setUnread(activity.applicationContext, hasUnread)
+        renderChatBadge(activity, hasUnread)
+    }
+
+    fun renderChatBadge(activity: Activity, hasUnread: Boolean) {
+        activity.findViewById<View>(R.id.viewNavUserBadge)?.visibility =
+            if (hasUnread) View.VISIBLE else View.GONE
+    }
+
+    private fun startChatBadgePolling(activity: Activity) {
+        val lifecycleActivity = activity as? ComponentActivity ?: return
+        lifecycleActivity.lifecycleScope.launch {
+            lifecycleActivity.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                while (true) {
+                    val unread = withContext(Dispatchers.IO) {
+                        ChatUnreadManager.refreshFromServer(activity.applicationContext)
+                    }
+                    renderChatBadge(activity, unread)
+                    delay(CHAT_BADGE_POLL_INTERVAL_MS)
+                }
+            }
+        }
     }
 }

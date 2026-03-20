@@ -199,6 +199,7 @@ class StoreLocationMapActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         map?.onResume()
+        BottomTabNavigator.refreshChatBadge(this)
     }
 
     override fun onPause() {
