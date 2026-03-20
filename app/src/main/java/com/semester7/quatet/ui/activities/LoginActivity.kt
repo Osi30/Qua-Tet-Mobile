@@ -18,9 +18,8 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Nếu đã đăng nhập rồi → chuyển thẳng sang ProductActivity
         if (SessionManager.isLoggedIn(this)) {
-            startActivity(Intent(this, ProductActivity::class.java))
+            navigateByRole(SessionManager.getRole(this))
             finish()
             return
         }
@@ -33,36 +32,30 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        // Nút Đăng nhập
         binding.btnLogin.setOnClickListener {
             val username = binding.edtUsername.text.toString().trim()
             val password = binding.edtPassword.text.toString().trim()
 
-            // Validate input
             if (username.isEmpty() || password.isEmpty()) {
-                showError("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu")
+                showError("Vui long nhap day du ten dang nhap va mat khau")
                 return@setOnClickListener
             }
 
             viewModel.login(username, password)
         }
 
-        // Link Đăng ký
         binding.tvRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
 
     private fun observeViewModel() {
-        // Loading state
         viewModel.isLoading.observe(this) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
             binding.btnLogin.isEnabled = !isLoading
         }
 
-        // Login thành công
         viewModel.authResult.observe(this) { result ->
-            // Lưu session
             SessionManager.saveSession(
                 context = this,
                 token = result.token,
@@ -72,17 +65,12 @@ class LoginActivity : AppCompatActivity() {
                 role = result.role
             )
 
-            Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
-
-            // Quay lại trang trước
-            val intent = Intent(this, ProductActivity::class.java)
-            startActivity(intent)
-
+            Toast.makeText(this, "Dang nhap thanh cong!", Toast.LENGTH_SHORT).show()
+            navigateByRole(result.role)
             setResult(RESULT_OK)
             finish()
         }
 
-        // Lỗi
         viewModel.errorMessage.observe(this) { errorMsg ->
             if (errorMsg != null) {
                 showError(errorMsg)
@@ -93,5 +81,18 @@ class LoginActivity : AppCompatActivity() {
     private fun showError(message: String) {
         binding.tvError.text = message
         binding.tvError.visibility = View.VISIBLE
+    }
+
+    private fun navigateByRole(role: String?) {
+        val target = if (isStaffOrAdmin(role)) StaffChatActivity::class.java else ProductActivity::class.java
+        val intent = Intent(this, target).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        startActivity(intent)
+    }
+
+    private fun isStaffOrAdmin(role: String?): Boolean {
+        val normalized = role?.uppercase().orEmpty()
+        return normalized == "STAFF" || normalized == "ADMIN"
     }
 }

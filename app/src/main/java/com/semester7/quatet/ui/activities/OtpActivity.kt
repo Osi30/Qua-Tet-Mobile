@@ -21,7 +21,6 @@ class OtpActivity : AppCompatActivity() {
         binding = ActivityOtpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Lấy username từ RegisterActivity
         username = intent.getStringExtra("username") ?: ""
 
         setupListeners()
@@ -29,30 +28,24 @@ class OtpActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        // Nút Back
         binding.btnBack.setOnClickListener { finish() }
 
-        // Nút Xác nhận OTP
         binding.btnVerify.setOnClickListener {
             val otp = binding.edtOtp.text.toString().trim()
-
-            if (otp.isEmpty() || otp.length != 6) {
-                showError("Vui lòng nhập đủ mã OTP 6 số")
+            if (otp.length != 6) {
+                showError("Vui long nhap dung OTP 6 so")
                 return@setOnClickListener
             }
-
             viewModel.verifyOtp(username, otp)
         }
     }
 
     private fun observeViewModel() {
-        // Loading
         viewModel.isLoading.observe(this) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
             binding.btnVerify.isEnabled = !isLoading
         }
 
-        // Xác thực thành công → lưu session → quay về ProductActivity
         viewModel.authResult.observe(this) { result ->
             SessionManager.saveSession(
                 context = this,
@@ -63,16 +56,11 @@ class OtpActivity : AppCompatActivity() {
                 role = result.role
             )
 
-            Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show()
-
-            // Quay thẳng về ProductActivity, xóa LoginActivity khỏi back stack
-            val intent = Intent(this, ProductActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-            startActivity(intent)
+            Toast.makeText(this, "Dang ky thanh cong!", Toast.LENGTH_SHORT).show()
+            navigateByRole(result.role)
             finish()
         }
 
-        // Lỗi
         viewModel.errorMessage.observe(this) { errorMsg ->
             if (errorMsg != null) {
                 showError(errorMsg)
@@ -83,5 +71,18 @@ class OtpActivity : AppCompatActivity() {
     private fun showError(message: String) {
         binding.tvError.text = message
         binding.tvError.visibility = View.VISIBLE
+    }
+
+    private fun navigateByRole(role: String?) {
+        val target = if (isStaffOrAdmin(role)) StaffChatActivity::class.java else ProductActivity::class.java
+        val intent = Intent(this, target).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        startActivity(intent)
+    }
+
+    private fun isStaffOrAdmin(role: String?): Boolean {
+        val normalized = role?.uppercase().orEmpty()
+        return normalized == "STAFF" || normalized == "ADMIN"
     }
 }

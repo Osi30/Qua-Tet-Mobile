@@ -135,12 +135,14 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:gravity="center"
         android:orientation="vertical">
 
         <FrameLayout
-            android:layout_width="28dp"
-            android:layout_height="24dp"
+            android:layout_width="32dp"
+            android:layout_height="28dp"
             android:clipChildren="false"
             android:clipToPadding="false">
 
@@ -157,8 +159,8 @@
                 android:layout_width="10dp"
                 android:layout_height="10dp"
                 android:layout_gravity="top|end"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="0dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="2dp"
                 android:background="@drawable/bg_badge_red"
                 android:visibility="gone" />
         </FrameLayout>

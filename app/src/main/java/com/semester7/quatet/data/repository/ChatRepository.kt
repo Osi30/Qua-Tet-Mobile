@@ -2,6 +2,7 @@ package com.semester7.quatet.data.repository
 
 import com.semester7.quatet.data.model.ChatConversationDTO
 import com.semester7.quatet.data.model.ChatMessageDTO
+import com.semester7.quatet.data.model.ReplyChatMessageRequest
 import com.semester7.quatet.data.model.SendChatMessageRequest
 import com.semester7.quatet.data.remote.ChatApiService
 import com.semester7.quatet.data.remote.RetrofitClient
@@ -17,8 +18,23 @@ class ChatRepository {
         return apiService.getMessages(conversationId).data
     }
 
+    suspend fun getMessagesForStaff(conversationId: Int): List<ChatMessageDTO> {
+        return apiService.getMessagesForStaff(conversationId).data
+    }
+
+    suspend fun getAllConversations(): List<ChatConversationDTO> {
+        return apiService.getAllConversations().data
+    }
+
     suspend fun sendMessage(content: String, orderId: Int? = null): ChatMessageDTO {
         return apiService.sendMessage(SendChatMessageRequest(orderId = orderId, content = content)).data
+    }
+
+    suspend fun replyToConversation(conversationId: Int, content: String, orderId: Int? = null): ChatMessageDTO {
+        return apiService.replyToConversation(
+            conversationId = conversationId,
+            request = ReplyChatMessageRequest(content = content, orderId = orderId)
+        ).data
     }
 
     suspend fun markRead(conversationId: Int) {

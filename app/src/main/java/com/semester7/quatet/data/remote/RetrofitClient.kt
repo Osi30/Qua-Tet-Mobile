@@ -8,26 +8,23 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 
-// Singleton (Start khi dùng lần đầu và chết khi ứng dụng bị kill)
 object RetrofitClient {
 
     private const val BASE_URL = "http://14.225.207.221:5000"
 
     private val json = Json {
-        // Tránh lỗi nếu API trả về thừa trường so với Model
         ignoreUnknownKeys = true
-        // Bỏ qua lỗi định dạng nhỏ
         isLenient = true
+        coerceInputValues = true
+        explicitNulls = false
     }
 
-    // Xem Log trong Logcat
     private val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
     private var retrofit: Retrofit? = null
 
-    // Khởi tạo RetrofitClient với Context (gọi 1 lần trong Application hoặc Activity đầu tiên)
     fun init(context: Context) {
         if (retrofit != null) return
 
@@ -43,7 +40,6 @@ object RetrofitClient {
             .build()
     }
 
-    // Hàm tiện ích để tạo các API Service
     fun <T> createService(serviceClass: Class<T>): T {
         return retrofit!!.create(serviceClass)
     }

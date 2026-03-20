@@ -33,17 +33,20 @@ class ChatSignalRClient(context: Context) {
     private var onReceiveMessage: ((ChatMessageDTO) -> Unit)? = null
     private var onTypingChanged: ((TypingEvent) -> Unit)? = null
     private var onMessagesRead: ((MessagesReadEvent) -> Unit)? = null
+    private var onConversationUpdated: ((ConversationUpdatedEvent) -> Unit)? = null
     private var onError: ((String) -> Unit)? = null
 
     fun setCallbacks(
         onReceiveMessage: ((ChatMessageDTO) -> Unit)? = null,
         onTypingChanged: ((TypingEvent) -> Unit)? = null,
         onMessagesRead: ((MessagesReadEvent) -> Unit)? = null,
+        onConversationUpdated: ((ConversationUpdatedEvent) -> Unit)? = null,
         onError: ((String) -> Unit)? = null
     ) {
         this.onReceiveMessage = onReceiveMessage
         this.onTypingChanged = onTypingChanged
         this.onMessagesRead = onMessagesRead
+        this.onConversationUpdated = onConversationUpdated
         this.onError = onError
     }
 
@@ -118,6 +121,10 @@ class ChatSignalRClient(context: Context) {
 
                 on("MessagesRead", { payload ->
                     parseMessagesReadEvent(payload)?.let { onMessagesRead?.invoke(it) }
+                }, Any::class.java)
+
+                on("ConversationUpdated", { payload ->
+                    parseConversationUpdatedEvent(payload)?.let { onConversationUpdated?.invoke(it) }
                 }, Any::class.java)
 
                 onClosed { error ->
@@ -212,7 +219,7 @@ class ChatSignalRClient(context: Context) {
         val id = asInt(getValueIgnoreCase(map, "id")) ?: return null
         val conversationId = asInt(getValueIgnoreCase(map, "conversationId")) ?: return null
         val senderId = asInt(getValueIgnoreCase(map, "senderId")) ?: return null
-        val content = asString(getValueIgnoreCase(map, "content")) ?: return null
+        val content = asString(getValueIgnoreCase(map, "content")).orEmpty()
         val orderId = asInt(getValueIgnoreCase(map, "orderId"))
         val isRead = asBoolean(getValueIgnoreCase(map, "isRead")) ?: false
         val createdAt = asString(getValueIgnoreCase(map, "createdAt"))
@@ -242,6 +249,24 @@ class ChatSignalRClient(context: Context) {
         val readerId = asInt(getValueIgnoreCase(map, "readerId")) ?: return null
         val messageIds = asIntList(getValueIgnoreCase(map, "messageIds"))
         return MessagesReadEvent(conversationId = conversationId, readerId = readerId, messageIds = messageIds)
+    }
+
+    private fun parseConversationUpdatedEvent(payload: Any?): ConversationUpdatedEvent? {
+        val map = payloadAsMap(payload) ?: return null
+        val conversationId = asInt(getValueIgnoreCase(map, "conversationId")) ?: return null
+        val userId = asInt(getValueIgnoreCase(map, "userId"))
+        val lastMessageAt = asString(getValueIgnoreCase(map, "lastMessageAt"))
+        val lastMessage = asString(getValueIgnoreCase(map, "lastMessage"))
+        val lastSenderId = asInt(getValueIgnoreCase(map, "lastSenderId"))
+        val hasNewMessage = asBoolean(getValueIgnoreCase(map, "hasNewMessage")) ?: false
+        return ConversationUpdatedEvent(
+            conversationId = conversationId,
+            userId = userId,
+            lastMessageAt = lastMessageAt,
+            lastMessage = lastMessage,
+            lastSenderId = lastSenderId,
+            hasNewMessage = hasNewMessage
+        )
     }
 
     private fun payloadAsMap(payload: Any?): Map<String, Any?>? {
@@ -298,4 +323,13 @@ data class MessagesReadEvent(
     val conversationId: Int,
     val readerId: Int,
     val messageIds: List<Int>
+)
+
+data class ConversationUpdatedEvent(
+    val conversationId: Int,
+    val userId: Int? = null,
+    val lastMessageAt: String? = null,
+    val lastMessage: String? = null,
+    val lastSenderId: Int? = null,
+    val hasNewMessage: Boolean = false
 )

@@ -3,6 +3,7 @@ package com.semester7.quatet.data.remote
 import com.semester7.quatet.data.model.BaseResponse
 import com.semester7.quatet.data.model.ChatConversationDTO
 import com.semester7.quatet.data.model.ChatMessageDTO
+import com.semester7.quatet.data.model.ReplyChatMessageRequest
 import com.semester7.quatet.data.model.SendChatMessageRequest
 import retrofit2.Response
 import retrofit2.http.Body
@@ -19,8 +20,20 @@ interface ChatApiService {
     @GET("api/chat/messages/me/{conversationId}")
     suspend fun getMessages(@Path("conversationId") conversationId: Int): BaseResponse<List<ChatMessageDTO>>
 
+    @GET("api/chat/messages/{conversationId}")
+    suspend fun getMessagesForStaff(@Path("conversationId") conversationId: Int): BaseResponse<List<ChatMessageDTO>>
+
     @POST("api/chat/send")
     suspend fun sendMessage(@Body request: SendChatMessageRequest): BaseResponse<ChatMessageDTO>
+
+    @POST("api/chat/reply/{conversationId}")
+    suspend fun replyToConversation(
+        @Path("conversationId") conversationId: Int,
+        @Body request: ReplyChatMessageRequest
+    ): BaseResponse<ChatMessageDTO>
+
+    @GET("api/chat/all")
+    suspend fun getAllConversations(): BaseResponse<List<ChatConversationDTO>>
 
     @PUT("api/chat/read/{conversationId}")
     suspend fun markRead(@Path("conversationId") conversationId: Int): Response<Unit>

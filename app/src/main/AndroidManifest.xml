@@ -75,6 +75,12 @@
             android:name=".ui.activities.ChatActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.activities.StaffChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.StaffConversationActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.OrderHistoryActivity"
             android:exported="false"
             android:launchMode="singleTask" />

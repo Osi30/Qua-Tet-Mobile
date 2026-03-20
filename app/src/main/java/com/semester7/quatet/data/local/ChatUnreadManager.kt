@@ -32,7 +32,7 @@ object ChatUnreadManager {
             val unread = if (conversation == null) {
                 false
             } else {
-                val inlineMessages = conversation.messages
+                val inlineMessages = conversation.messages.orEmpty()
                 if (inlineMessages.isNotEmpty()) {
                     inlineMessages.any { message -> !message.isRead && message.senderId != currentUserId }
                 } else {

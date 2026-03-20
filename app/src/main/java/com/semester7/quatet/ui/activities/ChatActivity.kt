@@ -111,7 +111,10 @@ class ChatActivity : AppCompatActivity() {
             adapter.updateData(messages)
             binding.layoutEmpty.visibility = if (messages.isEmpty()) View.VISIBLE else View.GONE
             if (messages.isNotEmpty()) {
-                binding.rvMessages.scrollToPosition(messages.lastIndex)
+                val lastPosition = adapter.getLastAdapterPosition()
+                if (lastPosition >= 0) {
+                    binding.rvMessages.scrollToPosition(lastPosition)
+                }
             }
         }
 
