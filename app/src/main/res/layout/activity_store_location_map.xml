@@ -32,9 +32,25 @@
             android:padding="14dp">
 
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Chọn cửa hàng"
+                android:textColor="#6A5A45"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spinnerStore"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_edittext" />
+
+            <TextView
                 android:id="@+id/tvStoreName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="Chọn một cửa hàng trên bản đồ"
                 android:textColor="#690000"
                 android:textSize="16sp"
@@ -45,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Địa chỉ"
+                android:text="Dia chi"
                 android:textColor="#333333"
                 android:textSize="13sp" />
 
@@ -54,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="SĐT"
+                android:text="SDT"
                 android:textColor="#555555"
                 android:textSize="13sp" />
 
@@ -63,7 +79,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="Giờ mở cửa"
+                android:text="Gio mo cua"
                 android:textColor="#555555"
                 android:textSize="13sp" />
 
@@ -74,7 +90,7 @@
                 android:layout_marginTop="8dp"
                 android:background="#FFF3E0"
                 android:padding="8dp"
-                android:text="Điểm xuất phát: chưa chọn"
+                android:text="Diem xuat phat: chua chon"
                 android:textColor="#8D4E00"
                 android:textSize="12sp" />
 

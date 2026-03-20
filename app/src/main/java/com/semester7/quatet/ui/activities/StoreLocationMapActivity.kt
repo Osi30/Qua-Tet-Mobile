@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,6 +21,13 @@ import org.osmdroid.views.overlay.Marker
 
 class StoreLocationMapActivity : AppCompatActivity() {
 
+    companion object {
+        private const val HCMC_LAT = 10.7769
+        private const val HCMC_LNG = 106.7009
+        private const val CITY_ZOOM = 11.8
+        private const val STORE_ZOOM = 16.0
+    }
+
     private lateinit var binding: ActivityStoreLocationMapBinding
     private val viewModel: StoreLocationViewModel by viewModels()
 
@@ -29,11 +37,15 @@ class StoreLocationMapActivity : AppCompatActivity() {
     private var selectedOriginLng: Double? = null
     private var selectedOriginText: String = "Điểm xuất phát: chưa chọn"
 
+    private val allStores = mutableListOf<StoreLocationDTO>()
+    private lateinit var storeSpinnerAdapter: ArrayAdapter<String>
+    private var ignoreStoreSpinnerEvent = false
+
     private val travelModes = listOf(
         "Lái xe" to "driving",
         "Đi bộ" to "walking",
         "Xe đạp" to "bicycling",
-        "Công cộng" to "transit"
+        "Phương tiện công cộng" to "transit"
     )
 
     private val pickOriginLauncher =
@@ -73,21 +85,39 @@ class StoreLocationMapActivity : AppCompatActivity() {
         map = binding.storeMap.apply {
             setTileSource(TileSourceFactory.MAPNIK)
             setMultiTouchControls(true)
-            controller.setZoom(5.5)
-            controller.setCenter(GeoPoint(16.3, 106.2))
+            controller.setZoom(CITY_ZOOM)
+            controller.setCenter(GeoPoint(HCMC_LAT, HCMC_LNG))
             minZoomLevel = 4.0
             maxZoomLevel = 19.0
         }
     }
 
     private fun setupUi() {
-        val adapter = ArrayAdapter(
+        val travelModeAdapter = ArrayAdapter(
             this,
             android.R.layout.simple_spinner_item,
             travelModes.map { it.first }
         )
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerTravelMode.adapter = adapter
+        travelModeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerTravelMode.adapter = travelModeAdapter
+
+        storeSpinnerAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            mutableListOf("Chọn cửa hàng")
+        )
+        storeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerStore.adapter = storeSpinnerAdapter
+        binding.spinnerStore.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (ignoreStoreSpinnerEvent) return
+                val storeIndex = position - 1
+                if (storeIndex !in allStores.indices) return
+                updateSelectedStore(allStores[storeIndex], animateToMap = true, syncDropdown = false)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+        }
 
         binding.btnPickOrigin.setOnClickListener {
             pickOriginLauncher.launch(
@@ -102,7 +132,7 @@ class StoreLocationMapActivity : AppCompatActivity() {
             val fromLat = selectedOriginLat
             val fromLng = selectedOriginLng
             if (store == null) {
-                Toast.makeText(this, "Vui lòng chọn cửa hàng trên bản đồ.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Vui lòng chọn cửa hàng.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             if (fromLat == null || fromLng == null) {
@@ -133,6 +163,7 @@ class StoreLocationMapActivity : AppCompatActivity() {
         }
 
         viewModel.locations.observe(this) { locations ->
+            setupStoreDropdown(locations)
             renderMarkers(locations)
         }
 
@@ -144,13 +175,29 @@ class StoreLocationMapActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupStoreDropdown(locations: List<StoreLocationDTO>) {
+        allStores.clear()
+        allStores.addAll(locations)
+
+        val labels = locations.map { store -> "${store.addressLine}" }
+
+        ignoreStoreSpinnerEvent = true
+        storeSpinnerAdapter.clear()
+        storeSpinnerAdapter.add("Chọn cửa hàng")
+        storeSpinnerAdapter.addAll(labels)
+        storeSpinnerAdapter.notifyDataSetChanged()
+        binding.spinnerStore.setSelection(0, false)
+        binding.spinnerStore.isEnabled = locations.isNotEmpty()
+        ignoreStoreSpinnerEvent = false
+    }
+
     private fun renderMarkers(locations: List<StoreLocationDTO>) {
         val mapView = map ?: return
         mapView.overlays.clear()
 
         if (locations.isEmpty()) {
-            mapView.controller.setZoom(5.5)
-            mapView.controller.setCenter(GeoPoint(16.3, 106.2))
+            mapView.controller.setZoom(CITY_ZOOM)
+            mapView.controller.setCenter(GeoPoint(HCMC_LAT, HCMC_LNG))
             mapView.invalidate()
             return
         }
@@ -162,17 +209,16 @@ class StoreLocationMapActivity : AppCompatActivity() {
                 title = store.name
                 snippet = buildString {
                     append(store.addressLine)
-                    if (!store.phoneNumber.isNullOrBlank()) append("\nSĐT: ${store.phoneNumber}")
-                    if (!store.openHoursText.isNullOrBlank()) append("\nGiờ: ${store.openHoursText}")
+                    if (!store.phoneNumber.isNullOrBlank()) append("\nSDT: ${store.phoneNumber}")
+                    if (!store.openHoursText.isNullOrBlank()) append("\nGio: ${store.openHoursText}")
                 }
                 setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
                 setOnMarkerClickListener { m, _ ->
                     val clicked = m.relatedObject as? StoreLocationDTO
                     if (clicked != null) {
-                        updateSelectedStore(clicked)
+                        updateSelectedStore(clicked, animateToMap = true, syncDropdown = true)
                     }
                     m.showInfoWindow()
-                    mapView.controller.animateTo(m.position)
                     true
                 }
                 relatedObject = store
@@ -180,20 +226,51 @@ class StoreLocationMapActivity : AppCompatActivity() {
             mapView.overlays.add(marker)
         }
 
-        mapView.controller.setZoom(5.5)
-        mapView.controller.setCenter(GeoPoint(16.3, 106.2))
-        mapView.invalidate()
+        mapView.controller.setZoom(CITY_ZOOM)
+        mapView.controller.setCenter(GeoPoint(HCMC_LAT, HCMC_LNG))
 
-        updateSelectedStore(locations.first())
+        val initialStore = findClosestStoreToHcm(locations) ?: locations.first()
+        updateSelectedStore(initialStore, animateToMap = false, syncDropdown = true)
+        mapView.invalidate()
     }
 
-    private fun updateSelectedStore(store: StoreLocationDTO) {
+    private fun findClosestStoreToHcm(locations: List<StoreLocationDTO>): StoreLocationDTO? {
+        return locations.minByOrNull { store ->
+            val dLat = store.latitude - HCMC_LAT
+            val dLng = store.longitude - HCMC_LNG
+            dLat * dLat + dLng * dLng
+        }
+    }
+
+    private fun selectStoreInDropdown(store: StoreLocationDTO) {
+        val index = allStores.indexOfFirst { it.storeLocationId == store.storeLocationId }
+        if (index < 0) return
+
+        val spinnerPosition = index + 1
+        if (binding.spinnerStore.selectedItemPosition == spinnerPosition) return
+
+        ignoreStoreSpinnerEvent = true
+        binding.spinnerStore.setSelection(spinnerPosition, false)
+        ignoreStoreSpinnerEvent = false
+    }
+
+    private fun updateSelectedStore(store: StoreLocationDTO, animateToMap: Boolean, syncDropdown: Boolean) {
         selectedStore = store
         binding.tvStoreName.text = store.name
         binding.tvStoreAddress.text = "Địa chỉ: ${store.addressLine}"
-        binding.tvStorePhone.text = "SĐT: ${store.phoneNumber ?: "Đang cập nhật"}"
-        binding.tvStoreHours.text = "Giờ làm việc: ${store.openHoursText ?: "Đang cập nhật"}"
+        binding.tvStorePhone.text = "SĐT: ${store.phoneNumber ?: "Dang cap nhat"}"
+        binding.tvStoreHours.text = "Giờ làm việc: ${store.openHoursText ?: "Dang cap nhat"}"
         binding.tvOriginAddress.text = selectedOriginText
+
+        if (syncDropdown) {
+            selectStoreInDropdown(store)
+        }
+
+        if (animateToMap) {
+            val mapView = map ?: return
+            mapView.controller.setZoom(STORE_ZOOM)
+            mapView.controller.animateTo(GeoPoint(store.latitude, store.longitude))
+        }
     }
 
     override fun onResume() {
