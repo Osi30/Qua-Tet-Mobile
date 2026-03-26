@@ -86,7 +86,7 @@
                 android:iconifiedByDefault="false"
                 android:imeOptions="actionSearch"
                 android:queryBackground="@android:color/transparent"
-                android:queryHint="Tìm kiếm sản phẩm..."
+                android:queryHint="Tìm kiếm tên hoặc mô tả sản phẩm..."
                 android:submitBackground="@android:color/transparent"
                 android:theme="@style/Theme.AppCompat.Light" />
 
