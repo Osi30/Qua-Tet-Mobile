@@ -115,7 +115,7 @@ class CartActivity : AppCompatActivity() {
                 binding.layoutFooter.visibility = View.VISIBLE
                 binding.tvClearCart.visibility = View.VISIBLE
 
-                adapter.updateData(cart.items)
+                adapter.updateData(cart.items.sortedBy { it.cartDetailId })
 
                 val total = cart.totalPrice ?: 0.0
                 currentTotalPrice = total
