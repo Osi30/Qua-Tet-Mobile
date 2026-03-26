@@ -28,8 +28,8 @@ data class AddressRequest(
     @SerialName("customerPhone") val customerPhone: String?,
     @SerialName("customerEmail") val customerEmail: String?,
     val addressLine: String,
-    val latitude: Double,
-    val longitude: Double,
+    val latitude: Double? = null,
+    val longitude: Double? = null,
     val isDefault: Boolean,
     val isActive: Boolean
 )

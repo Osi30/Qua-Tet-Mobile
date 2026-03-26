@@ -9,142 +9,106 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nhãn địa chỉ (ví dụ: Nhà, Công ty, Trọ)"
+            android:textColor="#6B5E4D"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
         <EditText
             android:id="@+id/edtLabel"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/bg_edittext"
-            android:hint="Nhãn địa chỉ (Home, Công ty...)"
+            android:hint="Nhập nhãn địa chỉ"
             android:inputType="text"
             android:paddingHorizontal="12dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tên người nhận (ví dụ: Nguyễn Văn A)"
+            android:textColor="#6B5E4D"
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/edtCustomerName"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/bg_edittext"
-            android:hint="Tên người nhận"
+            android:hint="Nhập tên người nhận"
             android:inputType="textPersonName"
             android:paddingHorizontal="12dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Số điện thoại (ví dụ: 0912345678)"
+            android:textColor="#6B5E4D"
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/edtCustomerPhone"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/bg_edittext"
-            android:hint="Số điện thoại"
+            android:hint="Nhập số điện thoại"
             android:inputType="phone"
             android:paddingHorizontal="12dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email (ví dụ: ten@email.com)"
+            android:textColor="#6B5E4D"
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/edtCustomerEmail"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/bg_edittext"
-            android:hint="Email"
+            android:hint="Nhập email"
             android:inputType="textEmailAddress"
             android:paddingHorizontal="12dp" />
-
-        <AutoCompleteTextView
-            android:id="@+id/edtAddressLine"
-            android:layout_width="match_parent"
-            android:layout_height="76dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/bg_edittext"
-            android:completionThreshold="2"
-            android:dropDownHeight="220dp"
-            android:dropDownHorizontalOffset="0dp"
-            android:dropDownVerticalOffset="4dp"
-            android:gravity="top|start"
-            android:hint="Địa chỉ cụ thể"
-            android:inputType="textMultiLine"
-            android:padding="12dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <EditText
-                android:id="@+id/edtLatitude"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="6dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_edittext"
-                android:hint="Latitude"
-                android:inputType="numberDecimal|numberSigned"
-                android:paddingHorizontal="12dp" />
-
-            <EditText
-                android:id="@+id/edtLongitude"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="6dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_edittext"
-                android:hint="Longitude"
-                android:inputType="numberDecimal|numberSigned"
-                android:paddingHorizontal="12dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btnUseCurrentLocation"
-                android:layout_width="0dp"
-                android:layout_height="38dp"
-                android:layout_marginEnd="6dp"
-                android:layout_weight="1"
-                android:backgroundTint="#8B0000"
-                android:text="Vị trí hiện tại"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/btnGeocodeAddress"
-                android:layout_width="0dp"
-                android:layout_height="38dp"
-                android:layout_marginStart="6dp"
-                android:layout_weight="1"
-                android:visibility="gone" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btnReverseGeocode"
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:layout_marginTop="8dp"
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/btnOpenGoogleMaps"
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="#FFF3E0"
-            android:text="Mở Google Maps"
-            android:textAllCaps="false"
-            android:textColor="#E65100"
-            android:textSize="12sp"
-            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Mẹo: chỉ cần nhập địa chỉ. Hệ thống sẽ tự sinh tọa độ khi lưu."
+            android:text="Địa chỉ giao hàng (ví dụ: 12 Lê Lợi, Quận 1, TP.HCM)"
+            android:textColor="#6B5E4D"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edtAddressLine"
+            android:layout_width="match_parent"
+            android:layout_height="76dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bg_edittext"
+            android:gravity="top|start"
+            android:hint="Nhập địa chỉ đầy đủ"
+            android:inputType="textMultiLine"
+            android:padding="12dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lưu ý: hệ thống chỉ lưu địa chỉ dạng văn bản, không xử lý và không lưu tọa độ."
             android:textColor="#666666"
             android:textSize="12sp" />
 
@@ -152,7 +116,7 @@
             android:id="@+id/switchDefault"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:text="Đặt làm địa chỉ mặc định"
             android:textColor="#333333" />
 

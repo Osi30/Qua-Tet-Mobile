@@ -61,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Dia chi"
+                android:text="Địa chỉ"
                 android:textColor="#333333"
                 android:textSize="13sp" />
 
@@ -70,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="SDT"
+                android:text="SĐT"
                 android:textColor="#555555"
                 android:textSize="13sp" />
 
@@ -79,32 +79,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="Gio mo cua"
+                android:text="Giờ mở cửa"
                 android:textColor="#555555"
                 android:textSize="13sp" />
 
             <TextView
-                android:id="@+id/tvOriginAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:background="#FFF3E0"
-                android:padding="8dp"
-                android:text="Diem xuat phat: chua chon"
+                android:text="Địa chỉ xuất phát"
                 android:textColor="#8D4E00"
-                android:textSize="12sp" />
-
-            <Button
-                android:id="@+id/btnPickOrigin"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:backgroundTint="#8B0000"
-                android:text="Chọn địa chỉ xuất phát"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white"
                 android:textSize="12sp"
                 android:textStyle="bold" />
+
+            <AutoCompleteTextView
+                android:id="@+id/edtOriginAddress"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_edittext"
+                android:completionThreshold="2"
+                android:dropDownHeight="240dp"
+                android:dropDownVerticalOffset="4dp"
+                android:hint="Nhập địa chỉ của bạn"
+                android:inputType="textPostalAddress"
+                android:paddingHorizontal="12dp" />
 
             <Spinner
                 android:id="@+id/spinnerTravelMode"

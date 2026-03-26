@@ -27,24 +27,19 @@ class AddressAdapter(
         val item = items[position]
         with(holder.binding) {
             tvLabel.text = item.label
-            tvAddress.text = item.addressLine
 
-            val customerInfo = buildString {
-                if (!item.customername.isNullOrBlank()) append(item.customername)
-                if (!item.customerphone.isNullOrBlank()) {
-                    if (isNotEmpty()) append(" - ")
-                    append(item.customerphone)
-                }
-                if (!item.customeremail.isNullOrBlank()) {
-                    if (isNotEmpty()) append("\n")
-                    append(item.customeremail)
-                }
-            }
+            val addressText = item.addressLine.ifBlank { "Chưa cập nhật" }
+            val nameText = item.customername?.takeIf { it.isNotBlank() } ?: "Chưa cập nhật"
+            val phoneText = item.customerphone?.takeIf { it.isNotBlank() } ?: "Chưa cập nhật"
+            val emailText = item.customeremail?.takeIf { it.isNotBlank() } ?: "Chưa cập nhật"
 
-            tvCustomerInfo.text = if (customerInfo.isBlank()) {
-                "Thông tin người nhận chưa cập nhật"
-            } else {
-                customerInfo
+            tvAddress.text = "Địa chỉ: $addressText"
+            tvCustomerInfo.text = buildString {
+                append("Tên: $nameText")
+                append("\n")
+                append("SĐT: $phoneText")
+                append("\n")
+                append("Email: $emailText")
             }
 
             tvDefault.visibility = if (item.isDefault) View.VISIBLE else View.GONE

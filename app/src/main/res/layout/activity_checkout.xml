@@ -102,48 +102,93 @@
                             android:textStyle="bold" />
                     </LinearLayout>
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:text="Họ và tên *"
+                        android:textColor="#6B5E4D"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
                     <EditText
                         android:id="@+id/edtCustomerName"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginBottom="10dp"
                         android:background="@android:drawable/edit_text"
-                        android:hint="Họ và tên *"
+                        android:hint="Ví dụ: Nguyễn Văn A"
                         android:inputType="textPersonName" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:text="Số điện thoại *"
+                        android:textColor="#6B5E4D"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/edtCustomerPhone"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginBottom="10dp"
                         android:background="@android:drawable/edit_text"
-                        android:hint="Số điện thoại *"
+                        android:hint="Ví dụ: 0912345678"
                         android:inputType="phone" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:text="Email *"
+                        android:textColor="#6B5E4D"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/edtCustomerEmail"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginBottom="10dp"
                         android:background="@android:drawable/edit_text"
-                        android:hint="Email *"
+                        android:hint="Ví dụ: ten@email.com"
                         android:inputType="textEmailAddress" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:text="Địa chỉ cụ thể *"
+                        android:textColor="#6B5E4D"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/edtCustomerAddress"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginBottom="10dp"
                         android:background="@android:drawable/edit_text"
-                        android:hint="Địa chỉ cụ thể *"
+                        android:hint="Ví dụ: 120 Lê Văn Quới, Bình Hưng Hòa A, Bình Tân, TP.HCM"
                         android:inputType="textPostalAddress" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:text="Ghi chú"
+                        android:textColor="#6B5E4D"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/edtNote"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:background="@android:drawable/edit_text"
-                        android:hint="Ghi chú (tùy chọn)"
+                        android:hint="Tùy chọn"
                         android:inputType="textMultiLine" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

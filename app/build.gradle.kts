@@ -83,7 +83,6 @@ dependencies {
 
     implementation(libs.androidx.fragment.ktx)
     implementation("me.leolin:ShortcutBadger:1.1.22@aar")
-    implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation("com.google.android.libraries.places:places:3.5.0")
     implementation("org.osmdroid:osmdroid-android:6.1.20")
     implementation("com.microsoft.signalr:signalr:8.0.7")
